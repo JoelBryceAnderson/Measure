@@ -30,7 +30,7 @@ public class RulerView extends View {
     private static final int DEFAULT_STROKE_WIDTH = 10;
     private static final int LABEL_TEXT_SIZE = 56;
     private static final int MARGIN_OFFSET = 25;
-    public static final int ANIMATION_DURATION = 300;
+    public static final int ANIMATION_DURATION = 200;
 
     private float mHeightInches;
     private float mYDPI;
@@ -38,7 +38,7 @@ public class RulerView extends View {
     private float mPointerLocation = 100;
 
     private int mAccentColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
-    private boolean mShowPointer;
+    private int mPointerAlpha = 255;
 
     Paint mPaint = new Paint();
     Paint mTextPaint = new Paint();
@@ -81,7 +81,10 @@ public class RulerView extends View {
         try {
             mAccentColor = a.getColor(R.styleable.RulerView_accentColor,
                     ContextCompat.getColor(getContext(), R.color.colorAccent));
-            mShowPointer = a.getBoolean(R.styleable.RulerView_showPointer, true);
+            boolean showPointer = a.getBoolean(R.styleable.RulerView_showPointer, true);
+            if (!showPointer) {
+                mPointerAlpha = 0;
+            }
         } finally {
             a.recycle();
         }
@@ -93,7 +96,7 @@ public class RulerView extends View {
         measureViewport();
         drawStrokes(canvas);
 
-        if (mShowPointer) {
+        if (mPointerAlpha > 0) {
             drawPointer(canvas);
             drawPointerLabel(canvas);
         }
@@ -101,7 +104,7 @@ public class RulerView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (mShowPointer) {
+        if (mPointerAlpha > 0) {
             //update pointer location
             mPointerLocation = event.getY();
             //refresh view
@@ -231,6 +234,7 @@ public class RulerView extends View {
         //Set new paint attributes
         mPaint.setColor(mAccentColor);
         mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setAlpha(mPointerAlpha);
 
         //Draw line and circle
         int circleRadius = getWidth() / 8;
@@ -242,6 +246,7 @@ public class RulerView extends View {
         //Revert paint attributes
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
+        mPaint.setAlpha(255);
     }
 
     /**
@@ -252,6 +257,7 @@ public class RulerView extends View {
     private void drawPointerLabel(Canvas canvas) {
         //Set new paint attributes
         mTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
+        mTextPaint.setAlpha(mPointerAlpha);
 
         //Round to tenth place
         String pointerLabel = String.format(Locale.getDefault(), "%.1f", mPointerLocation/mYDPI);
@@ -267,20 +273,37 @@ public class RulerView extends View {
 
         //Revert paint attributes
         mTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
+        mTextPaint.setAlpha(255);
     }
 
     public boolean isPointerShown() {
-        return mShowPointer;
+        return mPointerAlpha > 0;
     }
 
     /**
-     * Sets the visibility of the pointer
+     * Sets the transparency of the pointer
      *
-     * @param showPointer desired pointer visibility
+     * @param pointerAlpha desired pointer transparency
      */
-    public void setShowPointer(boolean showPointer) {
-        mShowPointer = showPointer;
+    public void setPointerAlpha(int pointerAlpha) {
+        mPointerAlpha = pointerAlpha;
         refreshView();
+    }
+
+    /**
+     * Toggle pointer visibility with smooth animation
+     */
+    public void animateShowHidePointer() {
+        int targetValue;
+        if (mPointerAlpha > 0) {
+            targetValue = 0;
+        } else {
+            targetValue = 255;
+        }
+        ObjectAnimator visAnim = ObjectAnimator
+                .ofInt(RulerView.this, "pointerAlpha", mPointerAlpha, targetValue);
+        visAnim.setDuration(ANIMATION_DURATION);
+        visAnim.start();
     }
 
     /**

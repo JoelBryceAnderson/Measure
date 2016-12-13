@@ -23,8 +23,6 @@ import abcmeasurecorp.com.measureit.view.RulerView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean mPointerHidden = false;
-
     private Button mTogglePointerButton;
     private RulerView mRulerView;
     private LinearLayout mRightContainer;
@@ -71,14 +69,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void togglePointer() {
         String label;
-        if (mPointerHidden) {
-            label = getString(R.string.button_hide_pointer);
-        } else {
+        if (mRulerView.isPointerShown()) {
             label = getString(R.string.button_show_pointer);
+        } else {
+            label = getString(R.string.button_hide_pointer);
         }
         mTogglePointerButton.setText(label);
-        mRulerView.setShowPointer(mPointerHidden);
-        mPointerHidden = !mPointerHidden;
+        mRulerView.animateShowHidePointer();
     }
 
     /**
@@ -118,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         colorAnim.setEvaluator(new ArgbEvaluator());
         colorAnim.setDuration(RulerView.ANIMATION_DURATION);
         colorAnim.start();
-
     }
 
     /**
