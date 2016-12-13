@@ -98,8 +98,10 @@ public class RulerView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mShowPointer) {
-            this.invalidate();
+            //update pointer location
             mPointerLocation = event.getY();
+            //refresh view
+            this.invalidate();
             return true;
         } else {
             return super.onTouchEvent(event);
@@ -266,14 +268,30 @@ public class RulerView extends View {
         return mShowPointer;
     }
 
+    /**
+     * Sets the visibility of the pointer
+     *
+     * @param showPointer desired pointer visibility
+     */
     public void setShowPointer(boolean showPointer) {
         mShowPointer = showPointer;
-        invalidate();
-        requestLayout();
+        refreshView();
     }
 
+    /**
+     * Sets the color of the pointer and inch markers
+     *
+     * @param accentColor new accent color
+     */
     public void setAccentColor(int accentColor) {
         mAccentColor = accentColor;
+        refreshView();
+    }
+
+    /**
+     * Redraws the view onscreen, used for setting of custom attributes at runtime
+     */
+    private void refreshView() {
         invalidate();
         requestLayout();
     }
