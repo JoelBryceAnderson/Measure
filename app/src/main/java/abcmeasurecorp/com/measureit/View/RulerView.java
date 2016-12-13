@@ -24,7 +24,6 @@ public class RulerView extends View {
     private static final int LABEL_TEXT_SIZE = 56;
 
     Paint mPaint = new Paint();
-
     Paint mTextPaint = new Paint();
 
     private float mHeightInches;
@@ -96,12 +95,14 @@ public class RulerView extends View {
     private void drawStrokes(Canvas canvas) {
         float i = 0;
         while (i < mHeightInches) {
-            setPaintColor(i);
-            int lineWidth = getLineWidth(i);
-            float yLocation = i * mYDPI + 5;
+            updatePaintColor(i);
 
-            canvas.drawLine(0, yLocation, lineWidth, yLocation, mPaint);
-            drawLabel(canvas, i, lineWidth - 50, yLocation - 25);
+            int lineWidth = getLineWidth(i);
+            float strokeLocation = (i * mYDPI) + 5;//offset all lines by 5 to ensure whole first line is visible
+            canvas.drawLine(0, strokeLocation, lineWidth, strokeLocation, mPaint);
+
+            drawLabel(canvas, i, lineWidth - 50, strokeLocation - 25);
+
             i += 0.0625;
         }
     }
@@ -111,7 +112,7 @@ public class RulerView extends View {
      *
      * @param i the current location onscreen in inches
      */
-    private void setPaintColor(float i) {
+    private void updatePaintColor(float i) {
         int floor = (int) i;
         if (i == floor) {
             mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
@@ -123,20 +124,20 @@ public class RulerView extends View {
     /**
      * Returns the strokes desired width
      *
-     * @param i the current location onscreen in inches
+     * @param inches the current location onscreen in inches
      * @return line width for stroke at current location
      */
-    private int getLineWidth(float i) {
-        double ceiling = Math.ceil(i);
-        double floor = Math.floor(i);
+    private int getLineWidth(float inches) {
+        double ceiling = Math.ceil(inches);
+        double floor = Math.floor(inches);
 
         int maxWidth = getWidth() / 2;
 
-        if (i == floor) {
+        if (inches == floor) {
             return maxWidth;
-        } else if (i - 0.5 == floor) {
+        } else if (inches - 0.5 == floor) {
             return maxWidth / 2;
-        } else if ( (i - 0.25 == floor) || (i + 0.25 == ceiling) ) {
+        } else if ( (inches - 0.25 == floor) || (inches + 0.25 == ceiling) ) {
             return maxWidth / 4;
         }
         return maxWidth / 8;
@@ -146,14 +147,15 @@ public class RulerView extends View {
      * Draws the label for the current stroke if location is whole inch
      *
      * @param canvas to draw label on
-     * @param i the current location onscreen in inches
+     * @param inches the current location onscreen in inches
      * @param x location in width to start text
      * @param y location in height to start text
      */
-    private void drawLabel(Canvas canvas, float i, float x, float y) {
-        int floor = (int) i;
-        if (i == floor) {
-            canvas.drawText(String.valueOf(floor), x, y, mTextPaint);
+    private void drawLabel(Canvas canvas, float inches, float x, float y) {
+        int floor = (int) inches;
+        if (inches == floor && inches > 0) {
+            String label = String.valueOf(floor);
+            canvas.drawText(label, x, y, mTextPaint);
         }
     }
 }
