@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity {
         mTogglePointerButton = (Button) findViewById(R.id.toggle_pointer_button);
         Button randomColorButton = (Button) findViewById(R.id.random_color_button);
 
-        mTogglePointerButton.setOnClickListener(togglePointer());
-        randomColorButton.setOnClickListener(setRandomColor());
+        mTogglePointerButton.setOnClickListener(clickTogglePointer());
+        randomColorButton.setOnClickListener(clickRandomColor());
     }
 
     @Override
@@ -55,19 +55,26 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return OnClickListener to assign to the toggle button
      */
-    private View.OnClickListener togglePointer() {
+    private View.OnClickListener clickTogglePointer() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mPointerHidden) {
-                    mTogglePointerButton.setText(getString(R.string.button_hide_pointer));
-                } else {
-                    mTogglePointerButton.setText(getString(R.string.button_show_pointer));
-                }
-                mRulerView.setShowPointer(mPointerHidden);
-                mPointerHidden = !mPointerHidden;
+                togglePointer();
             }
         };
+    }
+
+    /**
+     * Toggles visibility of pointer, toggles text on pointer visibility button
+     */
+    private void togglePointer() {
+        if (mPointerHidden) {
+            mTogglePointerButton.setText(getString(R.string.button_hide_pointer));
+        } else {
+            mTogglePointerButton.setText(getString(R.string.button_show_pointer));
+        }
+        mRulerView.setShowPointer(mPointerHidden);
+        mPointerHidden = !mPointerHidden;
     }
 
     /**
@@ -76,16 +83,23 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return OnClickListener to assign to the toggle button
      */
-    private View.OnClickListener setRandomColor() {
+    private View.OnClickListener clickRandomColor() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Random rnd = new Random();
-                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-                mRulerView.setAccentColor(color);
-                mRightContainer.setBackgroundColor(color);
+                setRandomColor();
             }
         };
+    }
+
+    /**
+     * Creates random color, sets right container background and ruler accent colors
+     */
+    private void setRandomColor() {
+        Random rnd = new Random();
+        int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+        mRulerView.setAccentColor(color);
+        mRightContainer.setBackgroundColor(color);
     }
 
     /**
