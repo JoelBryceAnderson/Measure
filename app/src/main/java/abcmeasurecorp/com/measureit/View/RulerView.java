@@ -293,16 +293,21 @@ public class RulerView extends View {
         refreshView();
     }
 
-    public int getAccentColor() {
-        return mAccentColor;
-    }
-
+    /**
+     * Sets accent color to new color with smooth animation
+     *
+     * @param accentColor desired new accent color
+     */
     public void animateAccentColor(int accentColor) {
         ObjectAnimator colorAnim = ObjectAnimator.ofInt(
                 RulerView.this, "accentColor", mAccentColor, accentColor);
         colorAnim.setEvaluator(new ArgbEvaluator());
         colorAnim.setDuration(ANIMATION_DURATION);
         colorAnim.start();
+    }
+
+    public int getAccentColor() {
+        return mAccentColor;
     }
 
     /**
