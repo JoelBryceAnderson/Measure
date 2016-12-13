@@ -1,5 +1,7 @@
 package abcmeasurecorp.com.measureit.view;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -25,9 +27,10 @@ import abcmeasurecorp.com.measureit.R;
 
 public class RulerView extends View {
 
+    private static final int DEFAULT_STROKE_WIDTH = 10;
     private static final int LABEL_TEXT_SIZE = 56;
     private static final int MARGIN_OFFSET = 25;
-    private static final int DEFAULT_STROKE_WIDTH = 10;
+    public static final int ANIMATION_DURATION = 300;
 
     private float mHeightInches;
     private float mYDPI;
@@ -288,6 +291,18 @@ public class RulerView extends View {
     public void setAccentColor(int accentColor) {
         mAccentColor = accentColor;
         refreshView();
+    }
+
+    public int getAccentColor() {
+        return mAccentColor;
+    }
+
+    public void animateAccentColor(int accentColor) {
+        ObjectAnimator colorAnim = ObjectAnimator.ofInt(
+                RulerView.this, "accentColor", mAccentColor, accentColor);
+        colorAnim.setEvaluator(new ArgbEvaluator());
+        colorAnim.setDuration(ANIMATION_DURATION);
+        colorAnim.start();
     }
 
     /**

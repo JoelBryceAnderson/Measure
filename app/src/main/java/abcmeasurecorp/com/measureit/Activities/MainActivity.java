@@ -1,5 +1,7 @@
 package abcmeasurecorp.com.measureit.activities;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -100,8 +102,23 @@ public class MainActivity extends AppCompatActivity {
     private void setRandomColor() {
         Random rnd = new Random();
         int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
-        mRulerView.setAccentColor(color);
-        mRightContainer.setBackgroundColor(color);
+
+        animateBackgroundColor(color);
+        mRulerView.animateAccentColor(color);
+    }
+
+    /**
+     * Changes the background color of the right container with animation
+     *
+     * @param color desired new background color
+     */
+    private void animateBackgroundColor(int color) {
+        ObjectAnimator colorAnim = ObjectAnimator.ofInt(mRightContainer, "backgroundColor",
+                mRulerView.getAccentColor(), color);
+        colorAnim.setEvaluator(new ArgbEvaluator());
+        colorAnim.setDuration(RulerView.ANIMATION_DURATION);
+        colorAnim.start();
+
     }
 
     /**
