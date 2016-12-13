@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,11 +10,15 @@
     tools:context="abcmeasurecorp.com.measureit.activities.MainActivity">
 
     <abcmeasurecorp.com.measureit.view.RulerView
+        android:id="@+id/ruler"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:accentColor="@color/colorAccent"
+        app:showPointer="true"/>
 
     <LinearLayout
+        android:id="@+id/right_container"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
@@ -27,7 +31,7 @@
         <ImageView
             android:layout_width="@dimen/icon_size"
             android:layout_height="@dimen/icon_size"
-            android:src="@drawable/ic_ruler"/>
+            android:src="@drawable/ic_ruler" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,6 +50,22 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_sub_header"
             android:text="@string/subtitle"/>
+
+        <Button
+            android:id="@+id/toggle_pointer_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/button_hide_pointer"/>
+
+        <Button
+            android:id="@+id/random_color_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:backgroundTint="@color/colorPrimary"
+            android:text="@string/button_random_color"/>
     </LinearLayout>
 
 </LinearLayout>

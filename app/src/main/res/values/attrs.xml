@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RulerView">
+        <attr name="showPointer" format="boolean" />
+        <attr name="accentColor" format="color" />
+    </declare-styleable>
+</resources>

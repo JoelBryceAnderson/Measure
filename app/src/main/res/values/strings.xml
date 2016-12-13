@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Measure!</string>
     <string name="subtitle">Made by Joel Anderson</string>
+    <string name="button_show_pointer">Show Pointer</string>
+    <string name="button_hide_pointer">Hide Pointer</string>
+    <string name="button_random_color">Random Color!</string>
 </resources>

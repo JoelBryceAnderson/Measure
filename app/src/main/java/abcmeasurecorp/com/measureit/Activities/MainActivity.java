@@ -1,10 +1,16 @@
 package abcmeasurecorp.com.measureit.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import java.util.Random;
 
 import abcmeasurecorp.com.measureit.R;
+import abcmeasurecorp.com.measureit.view.RulerView;
 
 /**
  * Created by Joel Anderson on 12/12/16.
@@ -15,10 +21,24 @@ import abcmeasurecorp.com.measureit.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean mPointerHidden = false;
+
+    private Button mTogglePointerButton;
+    private RulerView mRulerView;
+    private LinearLayout mRightContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mRulerView = (RulerView) findViewById(R.id.ruler);
+        mRightContainer = (LinearLayout) findViewById(R.id.right_container);
+        mTogglePointerButton = (Button) findViewById(R.id.toggle_pointer_button);
+        Button randomColorButton = (Button) findViewById(R.id.random_color_button);
+
+        mTogglePointerButton.setOnClickListener(togglePointer());
+        randomColorButton.setOnClickListener(setRandomColor());
     }
 
     @Override
@@ -27,6 +47,45 @@ public class MainActivity extends AppCompatActivity {
         if (hasFocus) {
             setImmersiveMode();
         }
+    }
+
+    /**
+     * Uses custom properties and events of RulerView to toggle the visibility
+     * of the ruler's pointer on button click
+     *
+     * @return OnClickListener to assign to the toggle button
+     */
+    private View.OnClickListener togglePointer() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPointerHidden) {
+                    mTogglePointerButton.setText(getString(R.string.button_hide_pointer));
+                } else {
+                    mTogglePointerButton.setText(getString(R.string.button_show_pointer));
+                }
+                mRulerView.setShowPointer(mPointerHidden);
+                mPointerHidden = !mPointerHidden;
+            }
+        };
+    }
+
+    /**
+     * Uses custom properties and events of RulerView to change accent colors onscreen
+     * to random color on button click.
+     *
+     * @return OnClickListener to assign to the toggle button
+     */
+    private View.OnClickListener setRandomColor() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                mRulerView.setAccentColor(color);
+                mRightContainer.setBackgroundColor(color);
+            }
+        };
     }
 
     /**

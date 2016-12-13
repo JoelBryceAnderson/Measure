@@ -2,55 +2,108 @@ package abcmeasurecorp.com.measureit.view;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.Locale;
 
 import abcmeasurecorp.com.measureit.R;
 
 /**
  * Created by Joel Anderson on 12/12/16.
  *
- * Custom view class that gets height and width of
- * viewport and displays accurate ruler markings in imperial units.
+ * Custom view class that gets height and width of viewport and
+ * displays accurate ruler markings every 1/16th inch.
  */
 
 public class RulerView extends View {
 
     private static final int LABEL_TEXT_SIZE = 56;
-
-    Paint mPaint = new Paint();
-    Paint mTextPaint = new Paint();
+    private static final int MARGIN_OFFSET = 16;
 
     private float mHeightInches;
     private float mYDPI;
 
+    private float mPointerLocation = 100;
+
+    private int mAccentColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
+    private boolean mShowPointer;
+
+    Paint mPaint = new Paint();
+    Paint mTextPaint = new Paint();
+
     public RulerView(Context context) {
         super(context);
+        initPaints();
     }
 
     public RulerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        initPaints();
+        initAttributes(context, attrs);
     }
 
     public RulerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initPaints();
+        initAttributes(context, attrs);
     }
 
     public RulerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        initPaints();
+        initAttributes(context, attrs);
+    }
+
+    /**
+     * Load custom view attributes, if possible
+     *
+     * @param context from which to load the resources
+     * @param attrs attributes passed from view creation
+     */
+    private void initAttributes(Context context, AttributeSet attrs) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.RulerView,
+                0, 0);
+
+        try {
+            mAccentColor = a.getColor(R.styleable.RulerView_accentColor,
+                    ContextCompat.getColor(getContext(), R.color.colorAccent));
+            mShowPointer = a.getBoolean(R.styleable.RulerView_showPointer, true);
+        } finally {
+            a.recycle();
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        initPaints();
         measureViewport();
         drawStrokes(canvas);
+
+        if (mShowPointer) {
+            drawPointer(canvas);
+            drawPointerLabel(canvas);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mShowPointer) {
+            this.invalidate();
+            mPointerLocation = event.getY();
+            return true;
+        } else {
+            return super.onTouchEvent(event);
+        }
     }
 
     /**
@@ -101,7 +154,7 @@ public class RulerView extends View {
             float strokeLocation = (i * mYDPI) + 5;//offset all lines by 5 to ensure whole first line is visible
             canvas.drawLine(0, strokeLocation, lineWidth, strokeLocation, mPaint);
 
-            drawLabel(canvas, i, lineWidth - 50, strokeLocation - 25);
+            drawLabel(canvas, i, lineWidth - 50, strokeLocation + 50);
 
             i += 0.0625;
         }
@@ -115,7 +168,7 @@ public class RulerView extends View {
     private void updatePaintColor(float i) {
         int floor = (int) i;
         if (i == floor) {
-            mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorAccent));
+            mPaint.setColor(mAccentColor);
         } else {
             mPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
         }
@@ -153,9 +206,75 @@ public class RulerView extends View {
      */
     private void drawLabel(Canvas canvas, float inches, float x, float y) {
         int floor = (int) inches;
-        if (inches == floor && inches > 0) {
+        if (inches == floor) {
             String label = String.valueOf(floor);
+
+            canvas.save();
+            canvas.rotate(90,x,y);
             canvas.drawText(label, x, y, mTextPaint);
+            canvas.restore();
         }
+    }
+
+    /**
+     * Draws line and circle that user can manipulate to measure objects.
+     *
+     * @param canvas to draw pointer on
+     */
+    private void drawPointer(Canvas canvas) {
+        //Set new paint attributes
+        mPaint.setColor(mAccentColor);
+        mPaint.setStyle(Paint.Style.FILL);
+
+        //Draw line and circle
+        int circleRadius = getWidth() / 8;
+        canvas.drawLine(0, mPointerLocation,
+                getWidth() - (circleRadius * 2) - MARGIN_OFFSET, mPointerLocation, mPaint);
+        canvas.drawCircle(
+                getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation, circleRadius, mPaint);
+
+        //Revert paint attributes
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
+    }
+
+    /**
+     * Draws label on pointer, marking number of inches to one significant figure
+     *
+     * @param canvas to draw label on
+     */
+    private void drawPointerLabel(Canvas canvas) {
+        //Set new paint attributes
+        mTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
+
+        //Round to tenth place
+        String pointerLabel = String.format(Locale.getDefault(), "%.1f", mPointerLocation/mYDPI);
+
+        //Draw Label in circle
+        int circleRadius = getWidth() / 8;
+        canvas.save();
+        canvas.rotate(90, getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation - 40);
+        canvas.drawText(pointerLabel,
+                getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation - 25, mTextPaint);
+        canvas.restore();
+
+        //Revert paint attributes
+        mTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
+    }
+
+    public boolean isPointerShown() {
+        return mShowPointer;
+    }
+
+    public void setShowPointer(boolean showPointer) {
+        mShowPointer = showPointer;
+        invalidate();
+        requestLayout();
+    }
+
+    public void setAccentColor(int accentColor) {
+        mAccentColor = accentColor;
+        invalidate();
+        requestLayout();
     }
 }
