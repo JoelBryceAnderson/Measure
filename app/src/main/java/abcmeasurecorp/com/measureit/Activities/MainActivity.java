@@ -68,11 +68,13 @@ public class MainActivity extends AppCompatActivity {
      * Toggles visibility of pointer, toggles text on pointer visibility button
      */
     private void togglePointer() {
+        String label;
         if (mPointerHidden) {
-            mTogglePointerButton.setText(getString(R.string.button_hide_pointer));
+            label = getString(R.string.button_hide_pointer);
         } else {
-            mTogglePointerButton.setText(getString(R.string.button_show_pointer));
+            label = getString(R.string.button_show_pointer);
         }
+        mTogglePointerButton.setText(label);
         mRulerView.setShowPointer(mPointerHidden);
         mPointerHidden = !mPointerHidden;
     }

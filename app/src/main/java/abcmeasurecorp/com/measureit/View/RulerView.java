@@ -26,7 +26,8 @@ import abcmeasurecorp.com.measureit.R;
 public class RulerView extends View {
 
     private static final int LABEL_TEXT_SIZE = 56;
-    private static final int MARGIN_OFFSET = 16;
+    private static final int MARGIN_OFFSET = 25;
+    private static final int DEFAULT_STROKE_WIDTH = 10;
 
     private float mHeightInches;
     private float mYDPI;
@@ -114,7 +115,7 @@ public class RulerView extends View {
     private void initPaints() {
         //Initialize paint properties for ruler strokes
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(10);
+        mPaint.setStrokeWidth(DEFAULT_STROKE_WIDTH);
         mPaint.setAntiAlias(false);
         mPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
 
@@ -130,7 +131,7 @@ public class RulerView extends View {
      */
     private void measureViewport() {
         DisplayMetrics dm = new DisplayMetrics();
-        //Ensure viewport can be measured
+        //Ensure viewport can be measured (rare case, but better to check before casting)
         if (getContext() instanceof Activity) {
             ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(dm);
             mYDPI = dm.ydpi;
@@ -230,10 +231,10 @@ public class RulerView extends View {
 
         //Draw line and circle
         int circleRadius = getWidth() / 8;
-        canvas.drawLine(0, mPointerLocation,
-                getWidth() - (circleRadius * 2) - MARGIN_OFFSET, mPointerLocation, mPaint);
-        canvas.drawCircle(
-                getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation, circleRadius, mPaint);
+        float lineX = getWidth() - (circleRadius * 2) - MARGIN_OFFSET;
+        float circleX = getWidth() - circleRadius - MARGIN_OFFSET;
+        canvas.drawLine(0, mPointerLocation, lineX, mPointerLocation, mPaint);
+        canvas.drawCircle(circleX, mPointerLocation, circleRadius, mPaint);
 
         //Revert paint attributes
         mPaint.setStyle(Paint.Style.STROKE);
@@ -254,10 +255,11 @@ public class RulerView extends View {
 
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
+        float x = getWidth() - circleRadius - MARGIN_OFFSET;
+        float y = mPointerLocation;
         canvas.save();
-        canvas.rotate(90, getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation - 40);
-        canvas.drawText(pointerLabel,
-                getWidth() - circleRadius - MARGIN_OFFSET, mPointerLocation - 25, mTextPaint);
+        canvas.rotate(90, x, y);
+        canvas.drawText(pointerLabel, x - 40, y + 20, mTextPaint);//offset text to center in circle
         canvas.restore();
 
         //Revert paint attributes
