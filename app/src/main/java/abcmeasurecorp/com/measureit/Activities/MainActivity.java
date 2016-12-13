@@ -1,4 +1,4 @@
-package abcmeasurecorp.com.measureit.Activities;
+package abcmeasurecorp.com.measureit.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

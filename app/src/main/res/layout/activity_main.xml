@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:weightSum="2"
-    tools:context="abcmeasurecorp.com.measureit.Activities.MainActivity">
+    tools:context="abcmeasurecorp.com.measureit.activities.MainActivity">
 
-    <abcmeasurecorp.com.measureit.View.RulerView
+    <abcmeasurecorp.com.measureit.view.RulerView
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent" />

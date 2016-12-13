@@ -1,4 +1,4 @@
-package abcmeasurecorp.com.measureit.View;
+package abcmeasurecorp.com.measureit.view;
 
 import android.app.Activity;
 import android.content.Context;
