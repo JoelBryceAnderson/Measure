@@ -294,16 +294,23 @@ public class RulerView extends View {
      * Toggle pointer visibility with smooth animation
      */
     public void animateShowHidePointer() {
-        int targetValue;
-        if (mPointerAlpha > 0) {
-            targetValue = 0;
-        } else {
-            targetValue = 255;
-        }
         ObjectAnimator visAnim = ObjectAnimator
-                .ofInt(RulerView.this, "pointerAlpha", mPointerAlpha, targetValue);
+                .ofInt(RulerView.this, "pointerAlpha", mPointerAlpha, getTargetAlpha());
         visAnim.setDuration(ANIMATION_DURATION);
         visAnim.start();
+    }
+
+    /**
+     * Returns opposite of current alpha value for visibility animations
+     *
+     * @return desired new alpha value
+     */
+    private int getTargetAlpha() {
+        if (mPointerAlpha > 0) {
+            return 0;
+        } else {
+            return 255;
+        }
     }
 
     /**
