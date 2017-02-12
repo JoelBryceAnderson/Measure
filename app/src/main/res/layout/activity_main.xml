@@ -15,7 +15,8 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         app:accentColor="@color/colorAccent"
-        app:showPointer="true"/>
+        app:showPointer="true"
+        app:metric="false" />
 
     <LinearLayout
         android:id="@+id/right_container"
@@ -60,10 +61,18 @@
             android:text="@string/button_hide_pointer"/>
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/toggle_metric_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            app:backgroundTint="@color/colorPrimary"
+            android:text="@string/button_metric"/>
+
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/random_color_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_marginTop="@dimen/margin_small"
             app:backgroundTint="@color/colorPrimary"
             android:text="@string/button_random_color"/>
     </LinearLayout>
