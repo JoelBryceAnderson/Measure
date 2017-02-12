@@ -3,10 +3,11 @@ package abcmeasurecorp.com.measureit.activities;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import java.util.Random;
@@ -23,7 +24,7 @@ import abcmeasurecorp.com.measureit.view.RulerView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button mTogglePointerButton;
+    private AppCompatButton mTogglePointerButton;
     private RulerView mRulerView;
     private LinearLayout mRightContainer;
 
@@ -34,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         mRulerView = (RulerView) findViewById(R.id.ruler);
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
-        mTogglePointerButton = (Button) findViewById(R.id.toggle_pointer_button);
-        Button randomColorButton = (Button) findViewById(R.id.random_color_button);
+        mTogglePointerButton = (AppCompatButton) findViewById(R.id.toggle_pointer_button);
+        AppCompatButton randomColorButton = (AppCompatButton) findViewById(R.id.random_color_button);
 
         mTogglePointerButton.setOnClickListener(clickTogglePointer());
         randomColorButton.setOnClickListener(clickRandomColor());
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
+        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
             setImmersiveMode();
         }
     }
@@ -121,13 +122,15 @@ public class MainActivity extends AppCompatActivity {
      * Sets fullscreen mode, hides system bars
      */
     private void setImmersiveMode() {
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        if (Build.VERSION.SDK_INT >= 19) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
 }

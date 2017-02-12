@@ -51,20 +51,20 @@
             android:textSize="@dimen/text_size_sub_header"
             android:text="@string/subtitle"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/toggle_pointer_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimary"
             android:text="@string/button_hide_pointer"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/random_color_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:backgroundTint="@color/colorPrimary"
+            app:backgroundTint="@color/colorPrimary"
             android:text="@string/button_random_color"/>
     </LinearLayout>
 
