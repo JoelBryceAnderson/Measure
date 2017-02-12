@@ -3,5 +3,6 @@
     <declare-styleable name="RulerView">
         <attr name="showPointer" format="boolean" />
         <attr name="accentColor" format="color" />
+        <attr name="metric" format="boolean" />
     </declare-styleable>
 </resources>
