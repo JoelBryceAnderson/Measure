@@ -320,6 +320,10 @@ public class RulerView extends View {
         this.invalidate();
     }
 
+    public void setIsMetric(boolean isMetric) {
+        this.mIsMetric = isMetric;
+    }
+
     /**
      * Sets the transparency of the pointer
      *
