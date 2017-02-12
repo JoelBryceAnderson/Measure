@@ -37,6 +37,8 @@ public class RulerView extends View {
 
     private float mPointerLocation = 100;
 
+    private boolean mIsMetric = false;
+
     private int mAccentColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
     private int mPointerAlpha = 255;
 
@@ -81,6 +83,7 @@ public class RulerView extends View {
         try {
             mAccentColor = a.getColor(R.styleable.RulerView_accentColor,
                     ContextCompat.getColor(getContext(), R.color.colorAccent));
+            mIsMetric = a.getBoolean(R.styleable.RulerView_metric, false);
             boolean showPointer = a.getBoolean(R.styleable.RulerView_showPointer, true);
             if (!showPointer) {
                 mPointerAlpha = 0;
@@ -94,7 +97,12 @@ public class RulerView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         measureViewport();
-        drawStrokes(canvas);
+
+        if (!mIsMetric) {
+            drawStrokes(canvas);
+        } else {
+            drawMetricStrokes(canvas);
+        }
 
         if (mPointerAlpha > 0) {
             drawPointer(canvas);
@@ -166,6 +174,22 @@ public class RulerView extends View {
             drawLabel(canvas, i, lineWidth - 50, strokeLocation + 50);
 
             i += 0.0625;
+        }
+    }
+
+    private void drawMetricStrokes(Canvas canvas) {
+        float i = 0;
+        float heightMetric = (float) (mHeightInches * 2.54) * 10;
+        while (i < heightMetric) {
+            updatePaintColor(i/10);
+
+            int lineWidth = getLineWidth(i/10);
+            float strokeLocation = ((float) (i/10 / 2.54) * mYDPI) + 5;//offset all lines by 5 to ensure whole first line is visible
+            canvas.drawLine(0, strokeLocation, lineWidth, strokeLocation, mPaint);
+
+            drawLabel(canvas, i/10, lineWidth - 50, strokeLocation + 50);
+
+            i += 1;
         }
     }
 
@@ -259,8 +283,15 @@ public class RulerView extends View {
         mTextPaint.setColor(ContextCompat.getColor(getContext(), R.color.white));
         mTextPaint.setAlpha(mPointerAlpha);
 
-        //Round to tenth place
-        String pointerLabel = String.format(Locale.getDefault(), "%.1f", mPointerLocation/mYDPI);
+        String pointerLabel;
+
+        if (!mIsMetric) {
+            //Round to tenth place
+            pointerLabel = String.format(Locale.getDefault(), "%.1f", mPointerLocation/mYDPI);
+        } else {
+            //Round to tenth place
+            pointerLabel = String.format(Locale.getDefault(), "%.1f", (mPointerLocation*2.54)/mYDPI);
+        }
 
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
@@ -278,6 +309,15 @@ public class RulerView extends View {
 
     public boolean isPointerShown() {
         return mPointerAlpha > 0;
+    }
+
+    public boolean isMetric() {
+        return mIsMetric;
+    }
+
+    public void toggleMetric() {
+        mIsMetric = !mIsMetric;
+        this.invalidate();
     }
 
     /**

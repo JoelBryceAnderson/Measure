@@ -24,6 +24,7 @@ import abcmeasurecorp.com.measureit.view.RulerView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private AppCompatButton mUnitsButton;
     private AppCompatButton mTogglePointerButton;
     private RulerView mRulerView;
     private LinearLayout mRightContainer;
@@ -37,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
         mTogglePointerButton = (AppCompatButton) findViewById(R.id.toggle_pointer_button);
         AppCompatButton randomColorButton = (AppCompatButton) findViewById(R.id.random_color_button);
+        mUnitsButton = (AppCompatButton) findViewById(R.id.toggle_metric_button);
 
         mTogglePointerButton.setOnClickListener(clickTogglePointer());
         randomColorButton.setOnClickListener(clickRandomColor());
+        mUnitsButton.setOnClickListener(clickToggleUnits());
     }
 
     @Override
@@ -48,6 +51,35 @@ public class MainActivity extends AppCompatActivity {
         if (hasFocus && Build.VERSION.SDK_INT >= 19) {
             setImmersiveMode();
         }
+    }
+
+    /**
+     * Uses custom properties and events of RulerView to toggle the units
+     * used in ruler view on click
+     *
+     * @return OnClickListener to assign to the toggle button
+     */
+    private View.OnClickListener clickToggleUnits() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                toggleUnits();
+            }
+        };
+    }
+
+    /**
+     * Toggles units of ruler, toggles text on units button
+     */
+    private void toggleUnits() {
+        String label;
+        if (mRulerView.isMetric()) {
+            label = getString(R.string.button_metric);
+        } else {
+            label = getString(R.string.button_imperial);
+        }
+        mUnitsButton.setText(label);
+        mRulerView.toggleMetric();
     }
 
     /**
