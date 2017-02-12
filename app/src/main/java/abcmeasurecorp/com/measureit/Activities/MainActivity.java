@@ -2,6 +2,7 @@ package abcmeasurecorp.com.measureit.activities;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,11 +29,14 @@ public class MainActivity extends AppCompatActivity {
     private AppCompatButton mTogglePointerButton;
     private RulerView mRulerView;
     private LinearLayout mRightContainer;
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        prefs = getPreferences(MODE_PRIVATE);
 
         mRulerView = (RulerView) findViewById(R.id.ruler);
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
@@ -43,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         mTogglePointerButton.setOnClickListener(clickTogglePointer());
         randomColorButton.setOnClickListener(clickRandomColor());
         mUnitsButton.setOnClickListener(clickToggleUnits());
+
+        boolean isMetric = prefs.getBoolean(getString(R.string.ruler_is_metric_pref_key), false);
+        mRulerView.setIsMetric(isMetric);
     }
 
     @Override
@@ -73,11 +80,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void toggleUnits() {
         String label;
+        SharedPreferences.Editor editor = prefs.edit();
         if (mRulerView.isMetric()) {
             label = getString(R.string.button_metric);
+            editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), false);
         } else {
             label = getString(R.string.button_imperial);
+            editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), true);
         }
+        editor.apply();
         mUnitsButton.setText(label);
         mRulerView.toggleMetric();
     }
