@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
 
         boolean isMetric = prefs.getBoolean(getString(R.string.ruler_is_metric_pref_key), false);
         mRulerView.setIsMetric(isMetric);
+        mUnitsButton.setText(
+                isMetric ? getString(R.string.button_imperial) : getString(R.string.button_metric));
     }
 
     @Override
