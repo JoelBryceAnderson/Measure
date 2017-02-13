@@ -18,6 +18,8 @@ import java.util.Locale;
 
 import abcmeasurecorp.com.measureit.R;
 
+import static android.R.attr.x;
+
 /**
  * Created by Joel Anderson on 12/12/16.
  *
@@ -296,7 +298,12 @@ public class RulerView extends View {
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
         float x = getWidth() - circleRadius - MARGIN_OFFSET;
-        float y = mPointerLocation;
+        float y;
+        if (pointerLabel.length() > 3) {
+            y = mPointerLocation - 20;
+        } else {
+            y = mPointerLocation;
+        }
         canvas.save();
         canvas.rotate(90, x, y);
         canvas.drawText(pointerLabel, x - 40, y + 20, mTextPaint);//offset text to center in circle
