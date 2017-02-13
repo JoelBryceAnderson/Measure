@@ -298,12 +298,7 @@ public class RulerView extends View {
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
         float x = getWidth() - circleRadius - MARGIN_OFFSET;
-        float y;
-        if (pointerLabel.length() > 3) {
-            y = mPointerLocation - 20;
-        } else {
-            y = mPointerLocation;
-        }
+        float y = pointerLabel.length() > 3 ? mPointerLocation - 20 : mPointerLocation;
         canvas.save();
         canvas.rotate(90, x, y);
         canvas.drawText(pointerLabel, x - 40, y + 20, mTextPaint);//offset text to center in circle
