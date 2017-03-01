@@ -48,10 +48,20 @@ public class MainActivity extends AppCompatActivity {
         randomColorButton.setOnClickListener(clickRandomColor());
         mUnitsButton.setOnClickListener(clickToggleUnits());
 
+        initUserPreferences();
+    }
+
+    private void initUserPreferences() {
         boolean isMetric = prefs.getBoolean(getString(R.string.ruler_is_metric_pref_key), false);
+        boolean showPointer = prefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
+
+        mRulerView.setShowPointer(showPointer);
         mRulerView.setIsMetric(isMetric);
-        mUnitsButton.setText(
-                isMetric ? getString(R.string.button_imperial) : getString(R.string.button_metric));
+
+        mUnitsButton.setText(isMetric ?
+                getString(R.string.button_imperial) : getString(R.string.button_metric));
+        mTogglePointerButton.setText(showPointer ?
+                getString(R.string.button_hide_pointer) : getString(R.string.button_show_pointer));
     }
 
     @Override
@@ -115,11 +125,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void togglePointer() {
         String label;
+        SharedPreferences.Editor editor = prefs.edit();
         if (mRulerView.isPointerShown()) {
             label = getString(R.string.button_show_pointer);
+            editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), false);
         } else {
             label = getString(R.string.button_hide_pointer);
+            editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
         }
+        editor.apply();
         mTogglePointerButton.setText(label);
         mRulerView.animateShowHidePointer();
     }

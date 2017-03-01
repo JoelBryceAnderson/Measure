@@ -7,4 +7,5 @@
     <string name="button_imperial">Imperial Units</string>
     <string name="button_random_color">Random Color!</string>
     <string name="ruler_is_metric_pref_key">abcmeasurecorp.com.measureit.rulerIsMetric</string>
+    <string name="ruler_show_pointer_pref_key">abcmeasurecorp.com.measureit.rulerShowPointer</string>
 </resources>

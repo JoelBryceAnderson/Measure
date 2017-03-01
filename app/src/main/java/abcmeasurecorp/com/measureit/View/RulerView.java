@@ -326,6 +326,10 @@ public class RulerView extends View {
         this.mIsMetric = isMetric;
     }
 
+    public void setShowPointer(boolean show) {
+        setPointerAlpha(show ? 255 : 0);
+    }
+
     /**
      * Sets the transparency of the pointer
      *
