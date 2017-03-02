@@ -2,7 +2,6 @@ package abcmeasurecorp.com.measureit.activities;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -51,20 +51,32 @@ public class MainActivity extends AppCompatActivity {
 
         mRulerView = (RulerView) findViewById(R.id.ruler);
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
+        mUnitsButton = (AppCompatButton) findViewById(R.id.toggle_metric_button);
         mTogglePointerButton = (AppCompatButton) findViewById(R.id.toggle_pointer_button);
         AppCompatButton randomColorButton = (AppCompatButton) findViewById(R.id.random_color_button);
-        mUnitsButton = (AppCompatButton) findViewById(R.id.toggle_metric_button);
 
-        mTogglePointerButton.setOnClickListener(clickTogglePointer());
-        randomColorButton.setOnClickListener(clickShowDialog());
-        mUnitsButton.setOnClickListener(clickToggleUnits());
+        mTogglePointerButton.setOnClickListener(v -> togglePointer());
+        mUnitsButton.setOnClickListener(v -> toggleUnits());
+        randomColorButton.setOnClickListener(v -> showDialog());
 
         initUserPreferences();
     }
 
     private void initUserPreferences() {
-        boolean isMetric = mPrefs.getBoolean(getString(R.string.ruler_is_metric_pref_key), false);
         boolean showPointer = mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
+
+        boolean isMetric;
+        String metricKey = getString(R.string.ruler_is_metric_pref_key);
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey(metricKey)) {
+            isMetric = getIntent().getExtras().getBoolean(metricKey);
+        } else {
+            isMetric = mPrefs.getBoolean(metricKey, false);
+        }
+
+        initViews(showPointer, isMetric);
+    }
+
+    private void initViews(boolean showPointer, boolean isMetric) {
         mCurrentColor = mPrefs.getInt(getString(R.string.ruler_color_pref_key),
                 ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
 
@@ -87,20 +99,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Uses custom properties and events of RulerView to toggle the units
-     * used in ruler view on click
-     *
-     * @return OnClickListener to assign to the toggle button
-     */
-    private View.OnClickListener clickToggleUnits() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                toggleUnits();
-            }
-        };
-    }
 
     /**
      * Toggles units of ruler, toggles text on units button
@@ -118,21 +116,6 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         mUnitsButton.setText(label);
         mRulerView.toggleMetric();
-    }
-
-    /**
-     * Uses custom properties and events of RulerView to toggle the visibility
-     * of the ruler's pointer on button click
-     *
-     * @return OnClickListener to assign to the toggle button
-     */
-    private View.OnClickListener clickTogglePointer() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                togglePointer();
-            }
-        };
     }
 
     /**
@@ -154,31 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Uses custom properties and events of RulerView to change accent colors onscreen
-     * to random color on button click.
-     *
-     * @return OnClickListener to assign to the toggle button
-     */
-    private View.OnClickListener clickShowDialog() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog();
-            }
-        };
-    }
-
-    private DialogInterface.OnClickListener clickRandomColor() {
-        return new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                setRandomColor();
-                saveColorSelection();
-            }
-        };
-    }
-
-    /**
      * Creates random color, sets right container background and ruler accent colors
      */
     private void setRandomColor() {
@@ -187,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
 
         animateBackgroundColor(mCurrentColor);
         mRulerView.animateAccentColor(mCurrentColor);
+        saveColorSelection();
     }
 
     /**
@@ -224,10 +183,11 @@ public class MainActivity extends AppCompatActivity {
                 .setView(R.layout.color_picker)
                 .setTitle(R.string.color_picker_title)
                 .setNegativeButton(R.string.cancel, null)
-                .setNeutralButton(R.string.random_color, clickRandomColor())
+                .setNeutralButton(R.string.random_color,
+                        (v,i) -> setRandomColor())
                 .show();
 
-        final ImageView button = (ImageView) mColorDialog.findViewById(R.id.choose_color);
+        final AppCompatImageView button = (AppCompatImageView) mColorDialog.findViewById(R.id.choose_color);
         final ImageView colorSpectrum = (ImageView) mColorDialog.findViewById(R.id.color_spectrum);
 
         if (colorSpectrum != null && button != null) {
@@ -239,34 +199,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private View.OnClickListener onColorSelected() {
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                animateBackgroundColor(mCurrentColor);
-                mRulerView.animateAccentColor(mCurrentColor);
-                mColorDialog.cancel();
-                saveColorSelection();
-            }
+        return view -> {
+            animateBackgroundColor(mCurrentColor);
+            mRulerView.animateAccentColor(mCurrentColor);
+            mColorDialog.cancel();
+            saveColorSelection();
         };
     }
 
     private View.OnTouchListener onSpectrumTouched(final ImageView colorSpectrum,
-                                                   final ImageView button, final Bitmap bitmap) {
-        return new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        int pixel = getSelectedPixel(event, colorSpectrum, bitmap);
-                        if (pixel != 0) {
-                            mCurrentColor = Color.argb(255,
-                                    Color.red(pixel), Color.green(pixel), Color.blue(pixel));
-                            button.getBackground()
-                                    .setColorFilter(mCurrentColor, PorterDuff.Mode.SRC_ATOP);
-                        }
-                }
-                return true;
+                                                   final AppCompatImageView button, final Bitmap bitmap) {
+        return (view, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    int pixel = getSelectedPixel(event, colorSpectrum, bitmap);
+                    if (pixel != 0) {
+                        mCurrentColor = Color.argb(255,
+                                Color.red(pixel), Color.green(pixel), Color.blue(pixel));
+                        button.getBackground()
+                                .setColorFilter(mCurrentColor, PorterDuff.Mode.SRC_ATOP);
+                    }
             }
+            return true;
         };
     }
 
