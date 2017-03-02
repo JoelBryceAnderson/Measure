@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="open_imperial"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_in"
+        android:shortcutShortLabel="@string/imperial"
+        android:shortcutLongLabel="@string/button_imperial"
+        android:shortcutDisabledMessage="@string/disabled_message"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="abcmeasurecorp.com.measureit"
+            android:targetClass="abcmeasurecorp.com.measureit.activities.MainActivity" >
+            <extra android:name="abcmeasurecorp.com.measureit.rulerIsMetric" android:value="false"/>
+        </intent>
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="open_metric"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_cm"
+        android:shortcutShortLabel="@string/metric"
+        android:shortcutLongLabel="@string/button_metric"
+        android:shortcutDisabledMessage="@string/disabled_message"
+        tools:targetApi="n_mr1">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="abcmeasurecorp.com.measureit"
+            android:targetClass="abcmeasurecorp.com.measureit.activities.MainActivity" >
+            <extra android:name="abcmeasurecorp.com.measureit.rulerIsMetric" android:value="true"/>
+        </intent>
+    </shortcut>
+
+</shortcuts>
