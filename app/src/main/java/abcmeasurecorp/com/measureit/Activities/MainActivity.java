@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
         mUnitsButton = (AppCompatButton) findViewById(R.id.toggle_metric_button);
         mTogglePointerButton = (AppCompatButton) findViewById(R.id.toggle_pointer_button);
-        AppCompatButton randomColorButton = (AppCompatButton) findViewById(R.id.random_color_button);
+        AppCompatButton randomColorButton =
+                (AppCompatButton) findViewById(R.id.random_color_button);
 
         mTogglePointerButton.setOnClickListener(v -> togglePointer());
         mUnitsButton.setOnClickListener(v -> toggleUnits());
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initUserPreferences() {
-        boolean showPointer = mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
+        boolean showPointer =
+                mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
 
         boolean isMetric;
         String metricKey = getString(R.string.ruler_is_metric_pref_key);
@@ -187,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
                         (v,i) -> setRandomColor())
                 .show();
 
-        final AppCompatImageView button = (AppCompatImageView) mColorDialog.findViewById(R.id.choose_color);
+        final AppCompatImageView button =
+                (AppCompatImageView)mColorDialog.findViewById(R.id.choose_color);
         final ImageView colorSpectrum = (ImageView) mColorDialog.findViewById(R.id.color_spectrum);
 
         if (colorSpectrum != null && button != null) {
@@ -208,7 +211,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private View.OnTouchListener onSpectrumTouched(final ImageView colorSpectrum,
-                                                   final AppCompatImageView button, final Bitmap bitmap) {
+                                                   final AppCompatImageView button,
+                                                   final Bitmap bitmap) {
         return (view, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_MOVE:
