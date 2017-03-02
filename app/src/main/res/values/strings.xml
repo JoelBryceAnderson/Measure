@@ -14,6 +14,10 @@
     <string name="random_color">Random Color</string>
     <string name="cancel">Close</string>
 
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
+    <string name="disabled_message">Shortcut Disabled</string>
+
     <string name="ruler_is_metric_pref_key">abcmeasurecorp.com.measureit.rulerIsMetric</string>
     <string name="ruler_show_pointer_pref_key">abcmeasurecorp.com.measureit.rulerShowPointer</string>
     <string name="ruler_color_pref_key">abcmeasurecorp.com.measureit.rulerColor</string>
