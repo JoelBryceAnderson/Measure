@@ -8,7 +8,7 @@
     <string name="button_metric">Metric Units</string>
     <string name="button_imperial">Imperial Units</string>
 
-    <string name="button_random_color">Change Color</string>
+    <string name="button_change_color">Change Color</string>
 
     <string name="color_picker_title">Pick a Color</string>
     <string name="random_color">Random Color</string>

@@ -13,8 +13,8 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,8 +34,8 @@ import abcmeasurecorp.com.measureit.view.RulerView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppCompatButton mUnitsButton;
-    private AppCompatButton mTogglePointerButton;
+    private AppCompatTextView mUnitsButton;
+    private AppCompatTextView mTogglePointerButton;
     private AlertDialog mColorDialog;
     private RulerView mRulerView;
     private LinearLayout mRightContainer;
@@ -51,10 +51,10 @@ public class MainActivity extends AppCompatActivity {
 
         mRulerView = (RulerView) findViewById(R.id.ruler);
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
-        mUnitsButton = (AppCompatButton) findViewById(R.id.toggle_metric_button);
-        mTogglePointerButton = (AppCompatButton) findViewById(R.id.toggle_pointer_button);
-        AppCompatButton randomColorButton =
-                (AppCompatButton) findViewById(R.id.random_color_button);
+        mUnitsButton = (AppCompatTextView) findViewById(R.id.toggle_metric_button);
+        mTogglePointerButton = (AppCompatTextView) findViewById(R.id.toggle_pointer_button);
+        AppCompatTextView randomColorButton =
+                (AppCompatTextView) findViewById(R.id.random_color_button);
 
         mTogglePointerButton.setOnClickListener(v -> togglePointer());
         mUnitsButton.setOnClickListener(v -> toggleUnits());
