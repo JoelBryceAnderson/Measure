@@ -10,4 +10,5 @@
 
     <dimen name="text_size_header">24sp</dimen>
     <dimen name="text_size_sub_header">16sp</dimen>
+    <dimen name="text_size_caption">12sp</dimen>
 </resources>

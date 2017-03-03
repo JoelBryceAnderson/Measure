@@ -68,6 +68,7 @@
                 android:drawableTop="@drawable/ic_pointer"
                 android:drawablePadding="8dp"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
                 android:text="@string/button_hide_pointer"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -81,6 +82,7 @@
                 android:drawablePadding="8dp"
                 android:drawableTop="@drawable/ic_units"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
                 android:text="@string/button_metric"/>
 
             <android.support.v7.widget.AppCompatTextView
@@ -94,6 +96,7 @@
                 android:drawableTop="@drawable/ic_colors"
                 android:drawablePadding="8dp"
                 android:textColor="@color/white"
+                android:textSize="@dimen/text_size_caption"
                 android:text="@string/button_change_color"/>
 
         </LinearLayout>
