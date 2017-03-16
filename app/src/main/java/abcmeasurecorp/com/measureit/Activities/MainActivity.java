@@ -183,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
 
         mColorDialog = new AlertDialog.Builder(this)
                 .setView(R.layout.color_picker)
-                .setTitle(R.string.color_picker_title)
                 .setNegativeButton(R.string.cancel, null)
                 .setNeutralButton(R.string.random_color,
                         (v,i) -> setRandomColor())

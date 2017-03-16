@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/color_spectrum" />
