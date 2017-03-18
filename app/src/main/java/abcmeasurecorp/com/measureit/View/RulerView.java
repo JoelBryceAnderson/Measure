@@ -297,7 +297,7 @@ public class RulerView extends View {
 
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
-        float x = getWidth() - circleRadius - MARGIN_OFFSET - (LABEL_TEXT_SIZE/2);
+        float x = getWidth() - circleRadius - MARGIN_OFFSET - (LABEL_TEXT_SIZE/3);
         float y = pointerLabel.length() > 4 ? mPointerLocation - LABEL_TEXT_SIZE/4 : mPointerLocation;
         canvas.save();
         canvas.rotate(90, x, y);
