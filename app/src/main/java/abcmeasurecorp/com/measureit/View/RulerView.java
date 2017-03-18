@@ -29,9 +29,9 @@ import static android.R.attr.x;
 
 public class RulerView extends View {
 
-    private static final int DEFAULT_STROKE_WIDTH = 10;
-    private static final int LABEL_TEXT_SIZE = 56;
-    private static final int MARGIN_OFFSET = 25;
+    private final float DEFAULT_STROKE_WIDTH = getResources().getDimension(R.dimen.stroke_width);
+    private final float LABEL_TEXT_SIZE = getResources().getDimension(R.dimen.text_size_sub_header);
+    private final float MARGIN_OFFSET = getResources().getDimension(R.dimen.text_size_sub_header);
     public static final int ANIMATION_DURATION = 200;
 
     private float mHeightInches;
@@ -170,10 +170,10 @@ public class RulerView extends View {
             updatePaintColor(i);
 
             int lineWidth = getLineWidth(i);
-            float strokeLocation = (i * mYDPI) + 5;//offset all lines by 5 to ensure whole first line is visible
+            float strokeLocation = (i * mYDPI);
             canvas.drawLine(0, strokeLocation, lineWidth, strokeLocation, mPaint);
 
-            drawLabel(canvas, i, lineWidth - 50, strokeLocation + 50);
+            drawLabel(canvas, i, lineWidth - LABEL_TEXT_SIZE, strokeLocation + LABEL_TEXT_SIZE/2);
 
             i += 0.0625;
         }
@@ -186,10 +186,10 @@ public class RulerView extends View {
             updatePaintColor(i/10);
 
             int lineWidth = getLineWidth(i/10);
-            float strokeLocation = ((float) (i/10 / 2.54) * mYDPI) + 5;//offset all lines by 5 to ensure whole first line is visible
+            float strokeLocation = ((float) (i/10 / 2.54) * mYDPI);
             canvas.drawLine(0, strokeLocation, lineWidth, strokeLocation, mPaint);
 
-            drawLabel(canvas, i/10, lineWidth - 50, strokeLocation + 50);
+            drawLabel(canvas, i/10, lineWidth - LABEL_TEXT_SIZE, strokeLocation + LABEL_TEXT_SIZE/2);
 
             i += 1;
         }
@@ -289,19 +289,19 @@ public class RulerView extends View {
 
         if (!mIsMetric) {
             //Round to tenth place
-            pointerLabel = String.format(Locale.getDefault(), "%.1f", mPointerLocation/mYDPI);
+            pointerLabel = String.format(Locale.getDefault(), "%.2f", (mPointerLocation)/mYDPI);
         } else {
             //Round to tenth place
-            pointerLabel = String.format(Locale.getDefault(), "%.1f", (mPointerLocation*2.54)/mYDPI);
+            pointerLabel = String.format(Locale.getDefault(), "%.2f", ((mPointerLocation)*2.54)/mYDPI);
         }
 
         //Draw Label in circle
         int circleRadius = getWidth() / 8;
-        float x = getWidth() - circleRadius - MARGIN_OFFSET;
-        float y = pointerLabel.length() > 3 ? mPointerLocation - 20 : mPointerLocation;
+        float x = getWidth() - circleRadius - MARGIN_OFFSET - (LABEL_TEXT_SIZE/2);
+        float y = pointerLabel.length() > 4 ? mPointerLocation - LABEL_TEXT_SIZE/4 : mPointerLocation;
         canvas.save();
         canvas.rotate(90, x, y);
-        canvas.drawText(pointerLabel, x - 40, y + 20, mTextPaint);//offset text to center in circle
+        canvas.drawText(pointerLabel, x - LABEL_TEXT_SIZE, y, mTextPaint);//offset text to center in circle
         canvas.restore();
 
         //Revert paint attributes
