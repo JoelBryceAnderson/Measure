@@ -47,8 +47,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPrefs = getPreferences(MODE_PRIVATE);
+        initViews();
+        initUserPreferences();
+    }
 
+    private void initViews() {
         mRulerView = (RulerView) findViewById(R.id.ruler);
         mRightContainer = (LinearLayout) findViewById(R.id.right_container);
         mUnitsButton = (AppCompatTextView) findViewById(R.id.toggle_metric_button);
@@ -59,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         mTogglePointerButton.setOnClickListener(v -> togglePointer());
         mUnitsButton.setOnClickListener(v -> toggleUnits());
         randomColorButton.setOnClickListener(v -> showDialog());
-
-        initUserPreferences();
     }
 
     private void initUserPreferences() {
+        mPrefs = getPreferences(MODE_PRIVATE);
+
         boolean showPointer =
                 mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
 
@@ -75,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
             isMetric = mPrefs.getBoolean(metricKey, false);
         }
 
-        initViews(showPointer, isMetric);
+        displayPreferences(showPointer, isMetric);
     }
 
-    private void initViews(boolean showPointer, boolean isMetric) {
+    private void displayPreferences(boolean showPointer, boolean isMetric) {
         mCurrentColor = mPrefs.getInt(getString(R.string.ruler_color_pref_key),
                 ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
 
@@ -106,17 +109,12 @@ public class MainActivity extends AppCompatActivity {
      * Toggles units of ruler, toggles text on units button
      */
     private void toggleUnits() {
-        String label;
         SharedPreferences.Editor editor = mPrefs.edit();
-        if (mRulerView.isMetric()) {
-            label = getString(R.string.button_metric);
-            editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), false);
-        } else {
-            label = getString(R.string.button_imperial);
-            editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), true);
-        }
+        editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), !mRulerView.isMetric());
         editor.apply();
-        mUnitsButton.setText(label);
+
+        mUnitsButton.setText(mRulerView.isMetric() ?
+                getString(R.string.button_metric) : getString(R.string.button_imperial));
         mRulerView.toggleMetric();
     }
 
@@ -124,17 +122,13 @@ public class MainActivity extends AppCompatActivity {
      * Toggles visibility of pointer, toggles text on pointer visibility button
      */
     private void togglePointer() {
-        String label;
         SharedPreferences.Editor editor = mPrefs.edit();
-        if (mRulerView.isPointerShown()) {
-            label = getString(R.string.button_show_pointer);
-            editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), false);
-        } else {
-            label = getString(R.string.button_hide_pointer);
-            editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), true);
-        }
+        editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key),
+                !mRulerView.isPointerShown());
         editor.apply();
-        mTogglePointerButton.setText(label);
+
+        mTogglePointerButton.setText(mRulerView.isPointerShown() ?
+                getString(R.string.button_show_pointer) : getString(R.string.button_hide_pointer));
         mRulerView.animateShowHidePointer();
     }
 
