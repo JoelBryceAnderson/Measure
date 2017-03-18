@@ -3,12 +3,15 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="margin_small">8dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
 
     <dimen name="icon_size">48dp</dimen>
     <dimen name="icon_size_small">24dp</dimen>
     <dimen name="view_elevation">8dp</dimen>
 
+    <dimen name="text_size_huge">48sp</dimen>
     <dimen name="text_size_header">24sp</dimen>
+    <dimen name="text_size_header_small">20sp</dimen>
     <dimen name="text_size_sub_header">16sp</dimen>
     <dimen name="text_size_caption">12sp</dimen>
 </resources>
