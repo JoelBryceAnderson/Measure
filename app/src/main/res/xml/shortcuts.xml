@@ -33,6 +33,6 @@
             android:targetClass="abcmeasurecorp.com.measureit.activities.MainActivity" >
             <extra android:name="abcmeasurecorp.com.measureit.rulerIsMetric" android:value="true"/>
         </intent>
-    </shortcut>
+x    </shortcut>
 
 </shortcuts>
