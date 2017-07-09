@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Measure!</string>
+    <string name="app_name">Measure</string>
     <string name="subtitle">Made by Joel Anderson</string>
 
     <string name="button_show_pointer">Show Pointer</string>
