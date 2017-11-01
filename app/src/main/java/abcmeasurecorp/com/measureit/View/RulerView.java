@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -32,7 +33,7 @@ public class RulerView extends View {
     private final float DEFAULT_STROKE_WIDTH = getResources().getDimension(R.dimen.stroke_width);
     private final float LABEL_TEXT_SIZE = getResources().getDimension(R.dimen.text_size_sub_header);
     private final float MARGIN_OFFSET = getResources().getDimension(R.dimen.text_size_sub_header);
-    public static final int ANIMATION_DURATION = 200;
+    public static final int ANIMATION_DURATION = 400;
 
     private float mHeightInches;
     private float mYDPI;
@@ -40,6 +41,7 @@ public class RulerView extends View {
     private float mPointerLocation = 100;
 
     private boolean mIsMetric = false;
+    private boolean mIsAmoled = false;
 
     private int mAccentColor = ContextCompat.getColor(getContext(), R.color.colorAccent);
     private int mPointerAlpha = 255;
@@ -205,7 +207,7 @@ public class RulerView extends View {
         if (i == floor) {
             mPaint.setColor(mAccentColor);
         } else {
-            mPaint.setColor(ContextCompat.getColor(getContext(), R.color.black));
+            mPaint.setColor(ContextCompat.getColor(getContext(), mIsAmoled ? R.color.white : R.color.black));
         }
     }
 
@@ -384,6 +386,16 @@ public class RulerView extends View {
         colorAnim.setEvaluator(new ArgbEvaluator());
         colorAnim.setDuration(ANIMATION_DURATION);
         colorAnim.start();
+    }
+
+    public boolean setIsAmoled() {
+        mIsAmoled = !mIsAmoled;
+        ObjectAnimator colorAnim = ObjectAnimator.ofInt(RulerView.this,
+                "backgroundColor", mIsAmoled ? Color.WHITE : Color.BLACK, mIsAmoled ? Color.BLACK : Color.WHITE);
+        colorAnim.setEvaluator(new ArgbEvaluator());
+        colorAnim.setDuration(ANIMATION_DURATION);
+        colorAnim.start();
+        return mIsAmoled;
     }
 
     public int getAccentColor() {

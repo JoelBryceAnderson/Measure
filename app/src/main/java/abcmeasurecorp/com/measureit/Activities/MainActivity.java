@@ -52,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mRulerView = (RulerView) findViewById(R.id.ruler);
-        mRightContainer = (LinearLayout) findViewById(R.id.right_container);
-        mUnitsButton = (AppCompatTextView) findViewById(R.id.toggle_metric_button);
-        mTogglePointerButton = (AppCompatTextView) findViewById(R.id.toggle_pointer_button);
+        mRulerView = findViewById(R.id.ruler);
+        mRightContainer = findViewById(R.id.right_container);
+        mUnitsButton = findViewById(R.id.toggle_metric_button);
+        mTogglePointerButton = findViewById(R.id.toggle_pointer_button);
         AppCompatTextView randomColorButton =
-                (AppCompatTextView) findViewById(R.id.random_color_button);
+                findViewById(R.id.random_color_button);
 
         mTogglePointerButton.setOnClickListener(v -> togglePointer());
         mUnitsButton.setOnClickListener(v -> toggleUnits());
@@ -135,6 +135,13 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Creates random color, sets right container background and ruler accent colors
      */
+    private void setDarkTheme() {
+        animateBackgroundColor(mRulerView.setIsAmoled() ? Color.BLACK : mCurrentColor);
+    }
+
+    /**
+     * Creates random color, sets right container background and ruler accent colors
+     */
     private void setRandomColor() {
         Random rnd = new Random();
         mCurrentColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
@@ -177,9 +184,10 @@ public class MainActivity extends AppCompatActivity {
 
         mColorDialog = new AlertDialog.Builder(this)
                 .setView(R.layout.color_picker)
-                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.cancel, null)
                 .setNeutralButton(R.string.random_color,
                         (v,i) -> setRandomColor())
+                .setNegativeButton("Dark Theme", (v,i)-> setDarkTheme())
                 .show();
 
         final AppCompatImageView button =
