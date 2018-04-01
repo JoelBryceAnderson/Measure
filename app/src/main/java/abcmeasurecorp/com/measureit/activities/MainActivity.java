@@ -2,6 +2,7 @@ package abcmeasurecorp.com.measureit.activities;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -27,7 +28,7 @@ import abcmeasurecorp.com.measureit.view.RulerView;
 
 /**
  * Created by Joel Anderson on 12/12/16.
- *
+ * <p>
  * Main Activity class, whose layout contains the ruler view
  * and all additional interactive views.
  */
@@ -52,12 +53,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mRulerView = (RulerView) findViewById(R.id.ruler);
-        mRightContainer = (LinearLayout) findViewById(R.id.right_container);
-        mUnitsButton = (AppCompatTextView) findViewById(R.id.toggle_metric_button);
-        mTogglePointerButton = (AppCompatTextView) findViewById(R.id.toggle_pointer_button);
-        AppCompatTextView randomColorButton =
-                (AppCompatTextView) findViewById(R.id.random_color_button);
+        mRulerView = findViewById(R.id.ruler);
+        mRightContainer = findViewById(R.id.right_container);
+        mUnitsButton = findViewById(R.id.toggle_metric_button);
+        mTogglePointerButton = findViewById(R.id.toggle_pointer_button);
+        AppCompatTextView randomColorButton = findViewById(R.id.random_color_button);
 
         mTogglePointerButton.setOnClickListener(v -> togglePointer());
         mUnitsButton.setOnClickListener(v -> toggleUnits());
@@ -174,17 +174,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void showDialog() {
         mCurrentColor = ContextCompat.getColor(MainActivity.this, R.color.colorAccent);
+        mColorDialog = showColorDialog();
 
-        mColorDialog = new AlertDialog.Builder(this)
-                .setView(R.layout.color_picker)
-                .setNegativeButton(R.string.cancel, null)
-                .setNeutralButton(R.string.random_color,
-                        (v,i) -> setRandomColor())
-                .show();
-
-        final AppCompatImageView button =
-                (AppCompatImageView)mColorDialog.findViewById(R.id.choose_color);
-        final ImageView colorSpectrum = (ImageView) mColorDialog.findViewById(R.id.color_spectrum);
+        final AppCompatImageView button = mColorDialog.findViewById(R.id.choose_color);
+        final ImageView colorSpectrum = mColorDialog.findViewById(R.id.color_spectrum);
 
         if (colorSpectrum != null && button != null) {
             final Bitmap bitmap = ((BitmapDrawable) colorSpectrum.getDrawable()).getBitmap();
@@ -192,6 +185,15 @@ public class MainActivity extends AppCompatActivity {
 
             button.setOnClickListener(onColorSelected());
         }
+    }
+
+    private AlertDialog showColorDialog() {
+        return new AlertDialog.Builder(this)
+                .setView(R.layout.color_picker)
+                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.random_color,
+                        (v, i) -> setRandomColor())
+                .show();
     }
 
     private View.OnClickListener onColorSelected() {
@@ -203,22 +205,34 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private View.OnTouchListener onSpectrumTouched(final ImageView colorSpectrum,
                                                    final AppCompatImageView button,
                                                    final Bitmap bitmap) {
         return (view, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_MOVE:
-                    int pixel = getSelectedPixel(event, colorSpectrum, bitmap);
-                    if (pixel != 0) {
-                        mCurrentColor = Color.argb(255,
-                                Color.red(pixel), Color.green(pixel), Color.blue(pixel));
-                        button.getBackground()
-                                .setColorFilter(mCurrentColor, PorterDuff.Mode.SRC_ATOP);
-                    }
+                    handleColorSelection(event, colorSpectrum, bitmap, button);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    view.performClick();
+                    break;
             }
             return true;
         };
+    }
+
+    private void handleColorSelection(MotionEvent event,
+                                      ImageView colorSpectrum,
+                                      Bitmap bitmap,
+                                      AppCompatImageView button) {
+        int pixel = getSelectedPixel(event, colorSpectrum, bitmap);
+        if (pixel != 0) {
+            mCurrentColor = Color.argb(255,
+                    Color.red(pixel), Color.green(pixel), Color.blue(pixel));
+            button.getBackground()
+                    .setColorFilter(mCurrentColor, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     private int getSelectedPixel(MotionEvent event,

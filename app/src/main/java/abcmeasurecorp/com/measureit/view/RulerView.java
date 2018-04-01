@@ -2,11 +2,15 @@ package abcmeasurecorp.com.measureit.view;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.Keep;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -17,8 +21,6 @@ import android.view.View;
 import java.util.Locale;
 
 import abcmeasurecorp.com.measureit.R;
-
-import static android.R.attr.x;
 
 /**
  * Created by Joel Anderson on 12/12/16.
@@ -64,6 +66,7 @@ public class RulerView extends View {
         initAttributes(context, attrs);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public RulerView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         initPaints();
@@ -112,6 +115,7 @@ public class RulerView extends View {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mPointerAlpha > 0) {
@@ -335,6 +339,7 @@ public class RulerView extends View {
      *
      * @param pointerAlpha desired pointer transparency
      */
+    @Keep
     public void setPointerAlpha(int pointerAlpha) {
         mPointerAlpha = pointerAlpha;
         refreshView();
@@ -368,6 +373,7 @@ public class RulerView extends View {
      *
      * @param accentColor new accent color
      */
+    @Keep
     public void setAccentColor(int accentColor) {
         mAccentColor = accentColor;
         refreshView();
