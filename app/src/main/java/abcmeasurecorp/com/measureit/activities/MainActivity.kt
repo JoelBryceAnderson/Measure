@@ -35,8 +35,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
-    private val mDialogBuilder = showColorDialog()
-    private val mPrefs: SharedPreferences = getPreferences(Context.MODE_PRIVATE)
+    private lateinit var mPrefs: SharedPreferences
     private var mCurrentColor: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUserPreferences() {
+        mPrefs = getPreferences(Context.MODE_PRIVATE)
         val showPointer = mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), true)
 
         val isMetric: Boolean
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDialog() {
         mCurrentColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
-        val dialog = mDialogBuilder.show()
+        val dialog = showColorDialog()
 
         val button = dialog.findViewById<AppCompatImageView>(R.id.choose_color)
         val colorSpectrum = dialog.findViewById<ImageView>(R.id.color_spectrum)
@@ -175,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton(R.string.cancel, null)
             .setNeutralButton(R.string.random_color
             ) { _, _ -> setRandomColor() }
+            .show()
 
     private fun onColorSelected(dialog: AlertDialog) {
         animateBackgroundColor(mCurrentColor)
