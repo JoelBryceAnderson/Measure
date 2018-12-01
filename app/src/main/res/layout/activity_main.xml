@@ -34,7 +34,6 @@
             android:layout_weight="2"
             app:cardBackgroundColor="@color/colorAccent"
             app:cardCornerRadius="@dimen/card_radius"
-            app:cardUseCompatPadding="t"
             app:cardElevation="@dimen/elevation_high">
 
             <androidx.appcompat.widget.LinearLayoutCompat
