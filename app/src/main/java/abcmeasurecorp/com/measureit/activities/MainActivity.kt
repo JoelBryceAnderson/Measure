@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
                 ContextCompat.getColor(this@MainActivity, R.color.colorAccent))
 
         ruler.setShowPointer(showPointer)
-        ruler.setIsMetric(isMetric)
+        ruler.isMetric = isMetric
         ruler.accentColor = mCurrentColor
         right_container.setBackgroundColor(mCurrentColor)
 
@@ -129,13 +129,13 @@ class MainActivity : AppCompatActivity() {
      *
      * @param color desired new background color
      */
-    private fun animateBackgroundColor(color: Int) {
-        val colorAnim = ObjectAnimator.ofInt(right_container, "backgroundColor",
-                ruler.accentColor, color)
-        colorAnim.setEvaluator(ArgbEvaluator())
-        colorAnim.duration = RulerView.ANIMATION_DURATION.toLong()
-        colorAnim.start()
-    }
+    private fun animateBackgroundColor(color: Int) = ObjectAnimator
+            .ofInt(right_container, "backgroundColor", ruler.accentColor, color)
+            .apply {
+                duration = RulerView.ANIMATION_DURATION
+                setEvaluator(ArgbEvaluator())
+            }
+            .start()
 
     /**
      * Sets fullscreen mode, hides system bars
