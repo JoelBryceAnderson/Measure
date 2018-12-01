@@ -1,14 +1,11 @@
 <resources>
     <string name="app_name">Measure</string>
-    <string name="subtitle">Made by Joel Anderson</string>
+    <string name="subtitle">Material Ruler</string>
 
     <string name="button_show_pointer">Show Pointer</string>
     <string name="button_hide_pointer">Hide Pointer</string>
-
-    <string name="button_metric">Metric Units</string>
-    <string name="button_imperial">Imperial Units</string>
-
-    <string name="button_change_color">Change Color</string>
+    <string name="button_metric">Units</string>
+    <string name="button_change_color">Color</string>
 
     <string name="color_picker_title">Pick a Color</string>
     <string name="random_color">Random Color</string>
@@ -16,6 +13,8 @@
 
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
+    <string name="imperial_label">Metric Units</string>
+    <string name="metric_label">Imperial Units</string>
     <string name="disabled_message">Shortcut Disabled</string>
 
     <string name="ruler_is_metric_pref_key">abcmeasurecorp.com.measureit.rulerIsMetric</string>

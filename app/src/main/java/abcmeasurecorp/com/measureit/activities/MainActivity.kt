@@ -48,9 +48,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        toggle_pointer_button.setOnClickListener { togglePointer() }
-        toggle_metric_button.setOnClickListener { toggleUnits() }
-        random_color_button.setOnClickListener { showDialog() }
+        pointerToggle.setOnClickListener { togglePointer() }
+        unitsToggle.setOnClickListener { toggleUnits() }
+        colorButton.setOnClickListener { showDialog() }
     }
 
     private fun initUserPreferences() {
@@ -73,12 +73,10 @@ class MainActivity : AppCompatActivity() {
         ruler.setShowPointer(showPointer)
         ruler.isMetric = isMetric
         ruler.accentColor = mCurrentColor
-        right_container.setBackgroundColor(mCurrentColor)
+//        right_container.setBackgroundColor(mCurrentColor)
 
-        toggle_metric_button.text = if (isMetric) getString(R.string.button_imperial)
-        else getString(R.string.button_metric)
-        toggle_pointer_button.text = if (showPointer) getString(R.string.button_hide_pointer)
-        else getString(R.string.button_show_pointer)
+//        toggle_pointer_button.text = if (showPointer) getString(R.string.button_hide_pointer)
+//        else getString(R.string.button_show_pointer)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -93,9 +91,6 @@ class MainActivity : AppCompatActivity() {
         val editor = mPrefs.edit()
         editor.putBoolean(getString(R.string.ruler_is_metric_pref_key), !ruler.isMetric)
         editor.apply()
-
-        toggle_metric_button.text = if (ruler.isMetric) getString(R.string.button_metric)
-        else getString(R.string.button_imperial)
         ruler.toggleMetric()
     }
 
@@ -107,8 +102,8 @@ class MainActivity : AppCompatActivity() {
         editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), !ruler.isPointerShown)
         editor.apply()
 
-        toggle_pointer_button.text = if (ruler.isPointerShown) getString(R.string.button_show_pointer)
-        else getString(R.string.button_hide_pointer)
+//        toggle_pointer_button.text = if (ruler.isPointerShown) getString(R.string.button_show_pointer)
+//        else getString(R.string.button_hide_pointer)
         ruler.animateShowHidePointer()
     }
 

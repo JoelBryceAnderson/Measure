@@ -8,7 +8,7 @@
         android:enabled="true"
         android:icon="@drawable/ic_shortcut_in"
         android:shortcutShortLabel="@string/imperial"
-        android:shortcutLongLabel="@string/button_imperial"
+        android:shortcutLongLabel="@string/imperial_label"
         android:shortcutDisabledMessage="@string/disabled_message"
         tools:targetApi="n_mr1">
         <intent
@@ -24,7 +24,7 @@
         android:enabled="true"
         android:icon="@drawable/ic_shortcut_cm"
         android:shortcutShortLabel="@string/metric"
-        android:shortcutLongLabel="@string/button_metric"
+        android:shortcutLongLabel="@string/metric_label"
         android:shortcutDisabledMessage="@string/disabled_message"
         tools:targetApi="n_mr1">
         <intent

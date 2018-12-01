@@ -33,8 +33,8 @@ class RulerView : View {
     private val labelTextSize = resources.getDimension(R.dimen.text_size_sub_header)
     private val marginOffset = resources.getDimension(R.dimen.text_size_sub_header)
 
-    private var mHeightInches: Float = 0f
-    private var mYDPI: Float = 0f
+    private var mWidthInches: Float = 0f
+    private var mXDPI: Float = 0f
 
     private var mPointerLocation = 100f
 
@@ -134,7 +134,7 @@ class RulerView : View {
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return if (mPointerAlpha > 0) {
             //update pointer location
-            mPointerLocation = event.y
+            mPointerLocation = event.x
             //refresh view
             this.invalidate()
             true
@@ -166,8 +166,8 @@ class RulerView : View {
         //Ensure viewport can be measured (rare case, but better to check before casting)
         if (context is Activity) {
             (context as Activity).windowManager.defaultDisplay.getMetrics(dm)
-            mYDPI = dm.ydpi
-            mHeightInches = height / mYDPI
+            mXDPI = dm.xdpi
+            mWidthInches = width / mXDPI
         } else Log.d("Error", "View not in activity, skipping measurements")
     }
 
@@ -180,14 +180,14 @@ class RulerView : View {
      */
     private fun drawStrokes(canvas: Canvas) {
         var i = 0f
-        while (i < mHeightInches) {
+        while (i < mWidthInches) {
             updatePaintColor(i)
 
             val lineWidth = getLineWidth(i)
-            val strokeLocation = i * mYDPI
-            canvas.drawLine(0f, strokeLocation, lineWidth.toFloat(), strokeLocation, mPaint)
+            val strokeLocation = i * mXDPI
+            canvas.drawLine(strokeLocation, height - lineWidth.toFloat(), strokeLocation, height.toFloat(), mPaint)
 
-            drawLabel(canvas, i, lineWidth - labelTextSize, strokeLocation + labelTextSize / 2)
+            drawLabel(canvas, i, strokeLocation + labelTextSize / 2, height.toFloat() - lineWidth)
 
             i += 0.0625f
         }
@@ -195,15 +195,15 @@ class RulerView : View {
 
     private fun drawMetricStrokes(canvas: Canvas) {
         var i = 0f
-        val heightMetric = (mHeightInches * 2.54).toFloat() * 10
-        while (i < heightMetric) {
+        val widthMetric = (mWidthInches * 2.54).toFloat() * 10
+        while (i < widthMetric) {
             updatePaintColor(i / 10)
 
             val lineWidth = getLineWidth(i / 10)
-            val strokeLocation = (i.toDouble() / 10.0 / 2.54).toFloat() * mYDPI
-            canvas.drawLine(0f, strokeLocation, lineWidth.toFloat(), strokeLocation, mPaint)
+            val strokeLocation = (i.toDouble() / 10.0 / 2.54).toFloat() * mXDPI
+            canvas.drawLine(strokeLocation, height - lineWidth.toFloat(), strokeLocation, height.toFloat(), mPaint)
 
-            drawLabel(canvas, i / 10, lineWidth - labelTextSize, strokeLocation + labelTextSize / 2)
+            drawLabel(canvas, i / 10, strokeLocation + labelTextSize / 2, height.toFloat() - lineWidth)
 
             i += 1f
         }
@@ -233,16 +233,12 @@ class RulerView : View {
         val ceiling = Math.ceil(inches.toDouble())
         val floor = Math.floor(inches.toDouble())
 
-        val maxWidth = width / 2
+        val maxWidth = height / 4
 
-        if (inches.toDouble() == floor) {
-            return maxWidth
-        } else if (inches - 0.5 == floor) {
-            return maxWidth / 2
-        } else if (inches - 0.25 == floor || inches + 0.25 == ceiling) {
-            return maxWidth / 4
-        }
-        return maxWidth / 8
+        return if (inches.toDouble() == floor) maxWidth
+        else if (inches - 0.5 == floor) maxWidth / 2
+        else if (inches - 0.25 == floor || inches + 0.25 == ceiling) maxWidth / 4
+        else maxWidth / 8
     }
 
     /**
@@ -258,10 +254,7 @@ class RulerView : View {
         if (inches == floor.toFloat()) {
             val label = floor.toString()
 
-            canvas.save()
-            canvas.rotate(90f, x, y)
             canvas.drawText(label, x, y, mTextPaint)
-            canvas.restore()
         }
     }
 
@@ -277,11 +270,11 @@ class RulerView : View {
         mPaint.alpha = mPointerAlpha
 
         //Draw line and circle
-        val circleRadius = width / 8
-        val lineX = width.toFloat() - (circleRadius * 2).toFloat() - marginOffset
-        val circleX = width.toFloat() - circleRadius.toFloat() - marginOffset
-        canvas.drawLine(0f, mPointerLocation, lineX, mPointerLocation, mPaint)
-        canvas.drawCircle(circleX, mPointerLocation, circleRadius.toFloat(), mPaint)
+        val circleRadius = height / 16
+        val lineY = (height.toFloat() / 2) + circleRadius.toFloat() + marginOffset
+        val circleY = (height.toFloat() / 2) + marginOffset
+        canvas.drawLine(mPointerLocation, lineY, mPointerLocation, height.toFloat(), mPaint)
+        canvas.drawCircle(mPointerLocation,  circleY, circleRadius.toFloat(), mPaint)
 
         //Revert paint attributes
         mPaint.style = Paint.Style.STROKE
@@ -300,16 +293,13 @@ class RulerView : View {
         mTextPaint.alpha = mPointerAlpha
 
         val labelValue = if (!isMetric) mPointerLocation else mPointerLocation * 2.54f
-        val pointerLabel = String.format(Locale.getDefault(), "%.2f", labelValue / mYDPI) //Round to tenth place
+        val pointerLabel = String.format(Locale.getDefault(), "%.2f", labelValue / mXDPI) //Round to tenth place
 
         //Draw Label in circle
-        val circleRadius = width / 8
-        val x = width.toFloat() - circleRadius.toFloat() - marginOffset - labelTextSize / 3
-        val y = if (pointerLabel.length > 4) mPointerLocation - labelTextSize / 4 else mPointerLocation
-        canvas.save()
-        canvas.rotate(90f, x, y)
+        val circleRadius = height / 16
+        val y = (height.toFloat() / 2)  + marginOffset + labelTextSize / 3
+        val x = if (pointerLabel.length > 4) mPointerLocation - labelTextSize / 4 else mPointerLocation
         canvas.drawText(pointerLabel, x - labelTextSize, y, mTextPaint)//offset text to center in circle
-        canvas.restore()
 
         //Revert paint attributes
         mTextPaint.color = ContextCompat.getColor(context, R.color.black)

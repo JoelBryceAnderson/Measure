@@ -1,106 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:weightSum="2"
+    android:orientation="vertical"
     tools:context="abcmeasurecorp.com.measureit.activities.MainActivity">
 
     <abcmeasurecorp.com.measureit.view.RulerView
         android:id="@+id/ruler"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:accentColor="@color/colorAccent"
-        app:showPointer="true"
-        app:metric="false" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:metric="false"
+        app:showPointer="true" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/right_container"
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="match_parent"
-        android:elevation="@dimen/view_elevation"
-        android:background="@color/colorAccent"
-        android:orientation="vertical"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
-            android:src="@drawable/ic_ruler" />
-
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_size_header"
-            android:text="@string/app_name"/>
+            android:layout_marginStart="@dimen/card_negative_offset"
+            android:layout_marginLeft="@dimen/card_negative_offset"
+            android:layout_weight="2"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/elevation_high">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_small"
-            android:textColor="@color/white"
-            android:text="@string/subtitle"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="3">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/toggle_pointer_button"
-                android:layout_width="0dp"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_gravity="center"
                 android:gravity="center"
-                android:background="?selectableItemBackgroundBorderless"
-                android:drawableTop="@drawable/ic_pointer"
-                android:drawablePadding="8dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_caption"
-                android:text="@string/button_hide_pointer"/>
+                android:orientation="vertical"
+                android:padding="@dimen/margin_small">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/toggle_metric_button"
-                android:layout_width="0dp"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_header"
+                    android:textStyle="bold"
+                    app:fontFamily="@font/family_product_sans" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/subtitle"
+                    android:textColor="@color/white"
+                    app:fontFamily="@font/family_product_sans" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pointerToggle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/card_negative_offset"
+            android:layout_marginLeft="@dimen/card_negative_offset"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/elevation_normal">
+
+            <ImageView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:gravity="center"
-                android:background="?selectableItemBackgroundBorderless"
-                android:drawablePadding="8dp"
-                android:drawableTop="@drawable/ic_units"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_caption"
-                android:text="@string/button_metric"/>
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_pointer" />
+        </androidx.cardview.widget.CardView>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/random_color_button"
-                android:layout_width="0dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/unitsToggle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/card_negative_offset"
+            android:layout_marginLeft="@dimen/card_negative_offset"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/elevation_low">
+
+            <ImageView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:gravity="center"
-                android:background="?selectableItemBackgroundBorderless"
-                android:drawableTop="@drawable/ic_colors"
-                android:drawablePadding="8dp"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_caption"
-                android:text="@string/button_change_color"/>
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_units" />
+        </androidx.cardview.widget.CardView>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/colorButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/card_negative_offset"
+            android:layout_marginLeft="@dimen/card_negative_offset"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?selectableItemBackgroundBorderless"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="@dimen/card_radius"
+            app:cardElevation="@dimen/elevation_very_low">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_colors" />
+        </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.constraintlayout.widget.ConstraintLayout>
