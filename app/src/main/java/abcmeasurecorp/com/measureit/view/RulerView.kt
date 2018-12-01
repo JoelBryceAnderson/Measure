@@ -233,7 +233,7 @@ class RulerView : View {
         val ceiling = Math.ceil(inches.toDouble())
         val floor = Math.floor(inches.toDouble())
 
-        val maxWidth = height / 4
+        val maxWidth = height / 3
 
         return if (inches.toDouble() == floor) maxWidth
         else if (inches - 0.5 == floor) maxWidth / 2
@@ -295,8 +295,7 @@ class RulerView : View {
         val labelValue = if (!isMetric) mPointerLocation else mPointerLocation * 2.54f
         val pointerLabel = String.format(Locale.getDefault(), "%.2f", labelValue / mXDPI) //Round to tenth place
 
-        //Draw Label in circle
-        val circleRadius = height / 16
+        //Draw ;abel in circle
         val y = (height.toFloat() / 2)  + marginOffset + labelTextSize / 3
         val x = if (pointerLabel.length > 4) mPointerLocation - labelTextSize / 4 else mPointerLocation
         canvas.drawText(pointerLabel, x - labelTextSize, y, mTextPaint)//offset text to center in circle

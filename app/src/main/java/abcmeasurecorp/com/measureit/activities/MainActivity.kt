@@ -37,7 +37,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mPrefs: SharedPreferences
-    private var mCurrentColor: Int = 0
+    private var mNightMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         pointerToggle.setOnClickListener { togglePointer() }
         unitsToggle.setOnClickListener { toggleUnits() }
-        colorButton.setOnClickListener { showDialog() }
+        nightModeButton.setOnClickListener { toggleNightMode() }
     }
 
     private fun initUserPreferences() {
@@ -67,16 +67,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun displayPreferences(showPointer: Boolean, isMetric: Boolean) {
-        mCurrentColor = mPrefs.getInt(getString(R.string.ruler_color_pref_key),
-                ContextCompat.getColor(this@MainActivity, R.color.colorAccent))
+        mNightMode = mPrefs.getBoolean(getString(R.string.ruler_show_pointer_pref_key), false)
 
         ruler.setShowPointer(showPointer)
         ruler.isMetric = isMetric
-        ruler.accentColor = mCurrentColor
-//        right_container.setBackgroundColor(mCurrentColor)
-
-//        toggle_pointer_button.text = if (showPointer) getString(R.string.button_hide_pointer)
-//        else getString(R.string.button_show_pointer)
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -101,22 +95,7 @@ class MainActivity : AppCompatActivity() {
         val editor = mPrefs.edit()
         editor.putBoolean(getString(R.string.ruler_show_pointer_pref_key), !ruler.isPointerShown)
         editor.apply()
-
-//        toggle_pointer_button.text = if (ruler.isPointerShown) getString(R.string.button_show_pointer)
-//        else getString(R.string.button_hide_pointer)
         ruler.animateShowHidePointer()
-    }
-
-    /**
-     * Creates random color, sets right container background and ruler accent colors
-     */
-    private fun setRandomColor() {
-        val rnd = Random()
-        mCurrentColor = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
-
-        animateBackgroundColor(mCurrentColor)
-        ruler.animateAccentColor(mCurrentColor)
-        saveColorSelection()
     }
 
     /**
@@ -145,74 +124,12 @@ class MainActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun showDialog() {
-        mCurrentColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
-        val dialog = showColorDialog()
-
-        val button = dialog.findViewById<AppCompatImageView>(R.id.choose_color)
-        val colorSpectrum = dialog.findViewById<ImageView>(R.id.color_spectrum)
-
-        if (colorSpectrum != null && button != null) {
-            val bitmap = (colorSpectrum.drawable as BitmapDrawable).bitmap
-            colorSpectrum.setOnTouchListener { view, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_MOVE -> handleColorSelection(event, colorSpectrum, bitmap, button)
-                    MotionEvent.ACTION_UP -> view.performClick()
-                }
-                true
-            }
-
-            button.setOnClickListener { onColorSelected(dialog) }
-        }
+    private fun toggleNightMode() {
+        saveNightModePreference(!mNightMode)
     }
 
-    private fun showColorDialog() = AlertDialog.Builder(this)
-            .setView(R.layout.color_picker)
-            .setNegativeButton(R.string.cancel, null)
-            .setNeutralButton(R.string.random_color
-            ) { _, _ -> setRandomColor() }
-            .show()
-
-    private fun onColorSelected(dialog: AlertDialog) {
-        animateBackgroundColor(mCurrentColor)
-        ruler.animateAccentColor(mCurrentColor)
-        dialog.cancel()
-        saveColorSelection()
-    }
-
-    private fun handleColorSelection(event: MotionEvent,
-                                     colorSpectrum: ImageView,
-                                     bitmap: Bitmap,
-                                     button: AppCompatImageView) {
-        val pixel = getSelectedPixel(event, colorSpectrum, bitmap)
-        if (pixel != 0) {
-            mCurrentColor = Color.argb(
-                    255, Color.red(pixel), Color.green(pixel), Color.blue(pixel))
-            button.background.setColorFilter(mCurrentColor, PorterDuff.Mode.SRC_ATOP)
-        }
-    }
-
-    private fun getSelectedPixel(event: MotionEvent,
-                                 colorSpectrum: ImageView, bitmap: Bitmap): Int {
-        val inverse = Matrix()
-        colorSpectrum.imageMatrix.invert(inverse)
-        val touchPoint = floatArrayOf(event.x, event.y)
-        inverse.mapPoints(touchPoint)
-        var currentX = touchPoint[0].toInt()
-        var currentY = touchPoint[1].toInt()
-
-        if (currentX < 0) currentX = 0
-        if (currentX > bitmap.width - 1) currentX = bitmap.width - 1
-
-        if (currentY < 0) currentY = 0
-        if (currentY > bitmap.height - 1) currentY = bitmap.height - 1
-
-        return bitmap.getPixel(currentX, currentY)
-    }
-
-    private fun saveColorSelection() = mPrefs
+    private fun saveNightModePreference(nightMode: Boolean) = mPrefs
             .edit()
-            .putInt(getString(R.string.ruler_color_pref_key), mCurrentColor)
+            .putBoolean(getString(R.string.ruler_night_mode_key), nightMode)
             .apply()
 }

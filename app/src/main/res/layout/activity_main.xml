@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -10,27 +10,21 @@
 
     <abcmeasurecorp.com.measureit.view.RulerView
         android:id="@+id/ruler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:accentColor="@color/colorAccent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:metric="false"
         app:showPointer="true" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/right_container"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:weightSum="7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingBottom="24dp"
+        android:weightSum="7">
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -40,6 +34,7 @@
             android:layout_weight="2"
             app:cardBackgroundColor="@color/colorAccent"
             app:cardCornerRadius="@dimen/card_radius"
+            app:cardUseCompatPadding="t"
             app:cardElevation="@dimen/elevation_high">
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -117,7 +112,7 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/colorButton"
+            android:id="@+id/nightModeButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="@dimen/card_negative_offset"
@@ -136,9 +131,9 @@
                 android:layout_gravity="center"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_colors" />
+                android:src="@drawable/ic_moon" />
         </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
