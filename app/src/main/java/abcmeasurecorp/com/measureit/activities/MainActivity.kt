@@ -13,14 +13,15 @@ import android.graphics.Matrix
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
@@ -47,11 +48,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        val randomColorButton = findViewById<AppCompatTextView>(R.id.random_color_button)
-
         toggle_pointer_button.setOnClickListener { togglePointer() }
         toggle_metric_button.setOnClickListener { toggleUnits() }
-        randomColorButton.setOnClickListener { showDialog() }
+        random_color_button.setOnClickListener { showDialog() }
     }
 
     private fun initUserPreferences() {
@@ -84,11 +83,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus && Build.VERSION.SDK_INT >= 19) {
-            setImmersiveMode()
-        }
+        if (hasFocus && Build.VERSION.SDK_INT >= KITKAT) setImmersiveMode()
     }
-
 
     /**
      * Toggles units of ruler, toggles text on units button
@@ -144,17 +140,17 @@ class MainActivity : AppCompatActivity() {
     /**
      * Sets fullscreen mode, hides system bars
      */
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun setImmersiveMode() {
-        if (Build.VERSION.SDK_INT >= 19) {
-            window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                    or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    or View.SYSTEM_UI_FLAG_FULLSCREEN
-                    or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun showDialog() {
         mCurrentColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
         val dialog = showColorDialog()
@@ -164,7 +160,13 @@ class MainActivity : AppCompatActivity() {
 
         if (colorSpectrum != null && button != null) {
             val bitmap = (colorSpectrum.drawable as BitmapDrawable).bitmap
-            colorSpectrum.setOnTouchListener(onSpectrumTouched(colorSpectrum, button, bitmap))
+            colorSpectrum.setOnTouchListener { view, event ->
+                when (event.action) {
+                    MotionEvent.ACTION_MOVE -> handleColorSelection(event, colorSpectrum, bitmap, button)
+                    MotionEvent.ACTION_UP -> view.performClick()
+                }
+                true
+            }
 
             button.setOnClickListener { onColorSelected(dialog) }
         }
@@ -182,19 +184,6 @@ class MainActivity : AppCompatActivity() {
         ruler.animateAccentColor(mCurrentColor)
         dialog.cancel()
         saveColorSelection()
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun onSpectrumTouched(colorSpectrum: ImageView,
-                                  button: AppCompatImageView,
-                                  bitmap: Bitmap): View.OnTouchListener {
-        return View.OnTouchListener { view, event ->
-            when (event.action) {
-                MotionEvent.ACTION_MOVE -> handleColorSelection(event, colorSpectrum, bitmap, button)
-                MotionEvent.ACTION_UP -> view.performClick()
-            }
-            true
-        }
     }
 
     private fun handleColorSelection(event: MotionEvent,
@@ -218,25 +207,17 @@ class MainActivity : AppCompatActivity() {
         var currentX = touchPoint[0].toInt()
         var currentY = touchPoint[1].toInt()
 
-        if (currentX < 0) {
-            currentX = 0
-        }
-        if (currentX > bitmap.width - 1) {
-            currentX = bitmap.width - 1
-        }
+        if (currentX < 0) currentX = 0
+        if (currentX > bitmap.width - 1) currentX = bitmap.width - 1
 
-        if (currentY < 0) {
-            currentY = 0
-        }
-        if (currentY > bitmap.height - 1) {
-            currentY = bitmap.height - 1
-        }
+        if (currentY < 0) currentY = 0
+        if (currentY > bitmap.height - 1) currentY = bitmap.height - 1
+
         return bitmap.getPixel(currentX, currentY)
     }
 
-    private fun saveColorSelection() {
-        val editor = mPrefs.edit()
-        editor.putInt(getString(R.string.ruler_color_pref_key), mCurrentColor)
-        editor.apply()
-    }
+    private fun saveColorSelection() = mPrefs
+            .edit()
+            .putInt(getString(R.string.ruler_color_pref_key), mCurrentColor)
+            .apply()
 }
