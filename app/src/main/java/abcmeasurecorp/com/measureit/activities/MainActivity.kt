@@ -4,27 +4,16 @@ import abcmeasurecorp.com.measureit.R
 import abcmeasurecorp.com.measureit.view.RulerView
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Matrix
-import android.graphics.PorterDuff
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Build.VERSION_CODES.KITKAT
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
-import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 /**
  * Created by Joel Anderson on 12/27/18.
@@ -37,10 +26,11 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mPrefs: SharedPreferences
-    private var mNightMode = false
+    private var mNightMode = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         setContentView(R.layout.activity_main)
 
         initViews()
@@ -99,19 +89,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Changes the background color of the right container with animation
-     *
-     * @param color desired new background color
-     */
-    private fun animateBackgroundColor(color: Int) = ObjectAnimator
-            .ofInt(right_container, "backgroundColor", ruler.accentColor, color)
-            .apply {
-                duration = RulerView.ANIMATION_DURATION
-                setEvaluator(ArgbEvaluator())
-            }
-            .start()
-
-    /**
      * Sets fullscreen mode, hides system bars
      */
     @RequiresApi(Build.VERSION_CODES.KITKAT)
@@ -125,7 +102,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleNightMode() {
-        saveNightModePreference(!mNightMode)
+        if (mNightMode) delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        else delegate.setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        mNightMode = !mNightMode
+        saveNightModePreference(mNightMode)
+        recreate()
     }
 
     private fun saveNightModePreference(nightMode: Boolean) = mPrefs
