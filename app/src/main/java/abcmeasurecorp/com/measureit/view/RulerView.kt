@@ -115,6 +115,8 @@ class RulerView : View {
         } finally {
             a.recycle()
         }
+
+        setBackgroundColor(ContextCompat.getColor(context, R.color.white))
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -215,12 +217,8 @@ class RulerView : View {
      * @param i the current location onscreen in inches
      */
     private fun updatePaintColor(i: Float) {
-        val floor = i.toInt()
-        if (i == floor.toFloat()) {
-            mPaint.color = mAccentColor
-        } else {
-            mPaint.color = ContextCompat.getColor(context, R.color.black)
-        }
+        mPaint.color = if (i == i.toInt().toFloat()) mAccentColor
+        else ContextCompat.getColor(context, R.color.black)
     }
 
     /**
@@ -294,7 +292,6 @@ class RulerView : View {
     private fun drawPointerLabel(canvas: Canvas) {
         //Set new paint attributes
         mTextPaint.color = ContextCompat.getColor(context, R.color.white)
-        mTextPaint.alpha = mPointerAlpha
 
         val labelValue = if (!isMetric) mPointerLocation else mPointerLocation * 2.54f
         val pointerLabel = String.format(Locale.getDefault(), "%.2f", labelValue / mXDPI) //Round to tenth place
@@ -306,7 +303,6 @@ class RulerView : View {
 
         //Revert paint attributes
         mTextPaint.color = ContextCompat.getColor(context, R.color.black)
-        mTextPaint.alpha = 255
     }
 
     fun toggleMetric() {
