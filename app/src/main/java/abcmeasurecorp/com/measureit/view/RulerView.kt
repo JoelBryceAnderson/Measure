@@ -233,7 +233,7 @@ class RulerView : View {
         val ceiling = Math.ceil(inches.toDouble())
         val floor = Math.floor(inches.toDouble())
 
-        val maxWidth = height / 3
+        val maxWidth = height / 4
 
         return if (inches.toDouble() == floor) maxWidth
         else if (inches - 0.5 == floor) maxWidth / 2
@@ -276,13 +276,13 @@ class RulerView : View {
         val circleY = (height.toFloat() / 2) + marginOffset
         canvas.drawCircle(mPointerLocation, circleY, circleRadius.toFloat(), mPaint)
         mPaint.strokeWidth = mPaint.strokeWidth * 2
+        mPaint.clearShadowLayer()
         canvas.drawLine(mPointerLocation, lineY, mPointerLocation, height.toFloat(), mPaint)
 
         //Revert paint attributes
         mPaint.style = Paint.Style.STROKE
         mPaint.color = ContextCompat.getColor(context, R.color.white)
         mPaint.strokeWidth = mPaint.strokeWidth / 2
-        mPaint.clearShadowLayer()
         mPaint.alpha = 255
     }
 
