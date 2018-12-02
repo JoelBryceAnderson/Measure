@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
@@ -20,21 +20,20 @@
         android:id="@+id/right_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="24dp"
-        android:weightSum="7">
+        android:orientation="vertical"
+        android:paddingBottom="32dp">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/card_negative_offset"
             android:layout_marginLeft="@dimen/card_negative_offset"
-            android:layout_weight="2"
             app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="@dimen/card_radius"
-            app:cardElevation="@dimen/elevation_high">
+            app:cardElevation="@dimen/elevation_normal"
+            app:contentPadding="@dimen/card_padding">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="wrap_content"
@@ -65,74 +64,69 @@
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/pointerToggle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/card_negative_offset"
-            android:layout_marginLeft="@dimen/card_negative_offset"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/card_padding"
+            android:layout_marginTop="@dimen/card_negative_offset"
+            android:layout_marginEnd="@dimen/card_padding"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?selectableItemBackgroundBorderless"
-            app:cardBackgroundColor="@color/colorAccent"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="@dimen/card_radius"
             app:cardElevation="@dimen/elevation_normal">
 
-            <ImageView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingStart="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_pointer" />
-        </androidx.cardview.widget.CardView>
+                android:layout_marginStart="@dimen/icon_padding"
+                android:layout_marginEnd="@dimen/icon_padding"
+                android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/unitsToggle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/card_negative_offset"
-            android:layout_marginLeft="@dimen/card_negative_offset"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackgroundBorderless"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="@dimen/card_radius"
-            app:cardElevation="@dimen/elevation_low">
+                <ImageView
+                    android:id="@+id/pointerToggle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:layout_gravity="center"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/icon_padding"
+                    android:src="@drawable/ic_pointer"
+                    android:tint="@color/colorAccent"
+                    tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_units" />
-        </androidx.cardview.widget.CardView>
+                <ImageView
+                    android:id="@+id/unitsToggle"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:layout_gravity="center"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/icon_padding"
+                    android:src="@drawable/ic_units"
+                    android:tint="@color/colorAccent"
+                    tools:ignore="ContentDescription" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/nightModeButton"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/card_negative_offset"
-            android:layout_marginLeft="@dimen/card_negative_offset"
-            android:layout_weight="1"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?selectableItemBackgroundBorderless"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="@dimen/card_radius"
-            app:cardElevation="@dimen/elevation_very_low">
+                <ImageView
+                    android:id="@+id/nightModeButton"
+                    android:layout_width="@dimen/icon_size_large"
+                    android:layout_height="@dimen/icon_size_large"
+                    android:layout_gravity="center"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="@dimen/icon_padding"
+                    android:src="@drawable/ic_moon"
+                    android:tint="@color/colorAccent"
+                    tools:ignore="ContentDescription" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingStart="@dimen/activity_horizontal_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_moon" />
+            </LinearLayout>
+
         </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</RelativeLayout>
+</FrameLayout>

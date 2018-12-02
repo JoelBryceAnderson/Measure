@@ -8,10 +8,13 @@
     <dimen name="toolbar_height">56dp</dimen>
 
     <dimen name="card_radius">12dp</dimen>
-    <dimen name="card_negative_offset">-32dp</dimen>
+    <dimen name="card_padding">24dp</dimen>
+    <dimen name="card_negative_offset">-36dp</dimen>
 
     <dimen name="icon_size">48dp</dimen>
     <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="icon_size_large">64dp</dimen>
+    <dimen name="icon_padding">18dp</dimen>
     <dimen name="view_elevation">8dp</dimen>
 
     <dimen name="elevation_high">16dp</dimen>

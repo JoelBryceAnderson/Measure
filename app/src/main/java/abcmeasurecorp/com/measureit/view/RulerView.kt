@@ -36,7 +36,7 @@ class RulerView : View {
     private var mWidthInches: Float = 0f
     private var mXDPI: Float = 0f
 
-    private var mPointerLocation = 100f
+    private var mPointerLocation = 200f
 
     var isMetric = false
 
@@ -268,17 +268,21 @@ class RulerView : View {
         mPaint.color = mAccentColor
         mPaint.style = Paint.Style.FILL
         mPaint.alpha = mPointerAlpha
+        if (mPointerAlpha > 120) mPaint.setShadowLayer(5f, 0f, 6f, ContextCompat.getColor(context, R.color.shadowColor))
 
         //Draw line and circle
         val circleRadius = height / 16
         val lineY = (height.toFloat() / 2) + circleRadius.toFloat() + marginOffset
         val circleY = (height.toFloat() / 2) + marginOffset
+        canvas.drawCircle(mPointerLocation, circleY, circleRadius.toFloat(), mPaint)
+        mPaint.strokeWidth = mPaint.strokeWidth * 2
         canvas.drawLine(mPointerLocation, lineY, mPointerLocation, height.toFloat(), mPaint)
-        canvas.drawCircle(mPointerLocation,  circleY, circleRadius.toFloat(), mPaint)
 
         //Revert paint attributes
         mPaint.style = Paint.Style.STROKE
         mPaint.color = ContextCompat.getColor(context, R.color.white)
+        mPaint.strokeWidth = mPaint.strokeWidth / 2
+        mPaint.clearShadowLayer()
         mPaint.alpha = 255
     }
 
@@ -296,7 +300,7 @@ class RulerView : View {
         val pointerLabel = String.format(Locale.getDefault(), "%.2f", labelValue / mXDPI) //Round to tenth place
 
         //Draw ;abel in circle
-        val y = (height.toFloat() / 2)  + marginOffset + labelTextSize / 3
+        val y = (height.toFloat() / 2) + marginOffset + labelTextSize / 3
         val x = if (pointerLabel.length > 4) mPointerLocation - labelTextSize / 4 else mPointerLocation
         canvas.drawText(pointerLabel, x - labelTextSize, y, mTextPaint)//offset text to center in circle
 
